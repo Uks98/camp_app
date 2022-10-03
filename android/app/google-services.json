@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "401542500299",
+    "project_id": "camp-849d5",
+    "storage_bucket": "camp-849d5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401542500299:android:ba00ee55037d37c6b1304e",
+        "android_client_info": {
+          "package_name": "com.example.camper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401542500299-jok457804jichtqatf0956onf8e5o357.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.camper",
+            "certificate_hash": "35c71f13f3b6e6b98bb6020f97c8bda8fc71ca75"
+          }
+        },
+        {
+          "client_id": "401542500299-f3c7g7c3f4tucgv0381168smi7daasu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTN5DkcFEfkJuyvfGBq_2PWgY7GuGn-no"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401542500299-f3c7g7c3f4tucgv0381168smi7daasu6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
