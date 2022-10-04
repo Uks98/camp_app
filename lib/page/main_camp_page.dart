@@ -10,6 +10,7 @@ class MainCamp extends StatefulWidget {
 class _MainCampState extends State<MainCamp> {
   @override
   Widget build(BuildContext context) {
+    String name = "캠핑,미국,영국,중국";
     return Scaffold(
       body: Text("hello! page"),
     );
