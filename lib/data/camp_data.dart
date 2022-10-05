@@ -25,7 +25,7 @@ String? toilet;//화장실 개수
 String? shower; //샤워실 개수
 String? wtrplCo;//개수대 개수
 String? freeCon; //부대시설
-String? freeCon1;//부대시설 기타
+String? freeCon2;//부대시설 기타
 
 String? posblFcltyCl;
 //주변이용가능시설
