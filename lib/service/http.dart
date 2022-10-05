@@ -14,26 +14,21 @@ import '../data/camp_data.dart';
 class CampApi{
   List<CampData> campData = [];
   Future<List<CampData>?> getCampList({required BuildContext context}) async {
-    var url = "https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=50&pageNo=1&MobileOS=AND&MobileApp=AAA&serviceKey=iwOI%252BU0JCUIMem0fddRQ9Y4Fj2E254wSmoXLGM3hVwqHiS8h12%252FqNozM62Kb5D4ihpeW4KWouAt%252B9djISlDJzw%253D%253D";
-    var response = await http.get(Uri.parse(url),);
+    var url = "https://apis.data.go.kr/1471000/FoodNtrIrdntInfoService1/getFoodNtrItdntList1?serviceKey=iwOI%2BU0JCUIMem0fddRQ9Y4Fj2E254wSmoXLGM3hVwqHiS8h12%2FqNozM62Kb5D4ihpeW4KWouAt%2B9djISlDJzw%3D%3D&desc_kor=%EB%B0%94%EB%82%98%EB%82%98%EC%B9%A9&pageNo=1&numOfRows=3&bgn_year=2017&animal_plant=(%EC%9C%A0)%EB%8F%8C%EC%BD%94%EB%A6%AC%EC%95%84&type=json";
+    var response = await http.get(Uri.parse(url));
+    print(response);
     if (response.statusCode == 200) {
-      print(response);
       String body = utf8.decode(response.bodyBytes);
       var res = json.decode(body) as Map<String,dynamic>;
-      if(res["response"]["body"]["items"]["item"] == ""){
+      if(res["body"]["items"][0] == ""){
         showDia(context);
       }
-      for(final _res in res["response"]["body"]["items"]["item"]){
+      for(final _res in res["body"]["items"][0]){
         final m = CampData.fromJson(_res as Map<String,dynamic>);
         campData.add(m);
       }
     }
     return campData;
-  }
-  @override
-  String toString() {
-    // TODO: implement toString
-    return super.toString();
   }
   void showDia(BuildContext context){
     showDialog(
