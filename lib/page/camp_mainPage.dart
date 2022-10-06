@@ -23,11 +23,11 @@ class _MainCampState extends State<MainCamp> {
     "lib/asset/bonfire.png",
   ];
   List <String> camp = ["카라반","글램핑","오토캠핑"];
-  List<CampData>? campList = [];
+  List<CampData> campList = [];
   CampApi campApi = CampApi();
 
   void getCampData()async{
-    campList = await campApi.getCampList(context: context);
+    campList = (await campApi.getCampList(context: context))!;
     setState(() {});
   }
   @override
@@ -100,8 +100,8 @@ class _MainCampState extends State<MainCamp> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       child: widgetBox.campingListWidget(
-                          "https://googleflutter.com/sample_image.jpg",
-                          "아랍",
+                          campList[index].firstImageUrl == null ? "asdasda" : campList[index].firstImageUrl.toString(),
+                          campList[index].tel.toString(),
                           "위치",
                           "이름"),
                     );
@@ -109,7 +109,7 @@ class _MainCampState extends State<MainCamp> {
                   separatorBuilder: (ctx, idx) {
                     return decorationWidgetBox.listMargin();
                   },
-                  itemCount: 5),
+                  itemCount: campList.length),
             ),
           ],
         ),
