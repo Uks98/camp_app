@@ -1,5 +1,6 @@
 import 'package:camper/color/color.dart';
 import 'package:camper/data/search_camp.dart';
+import 'package:camper/page/detail_page.dart';
 import 'package:camper/page/location_page.dart';
 import 'package:camper/page/search_keyword_page.dart';
 import 'package:camper/widget/decoration.dart';
@@ -92,7 +93,13 @@ class _MainCampState extends State<MainCamp> {
                 );
               }return GestureDetector(
                 onTap: (){
-
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
+                      DetailPage(
+                        campData: CampData(
+                          campId: campList[index].campId,
+                        ),
+                      )
+                  ));
                 },
                 child: _widgetBox.campingListWidget(
                     campList[index].firstImageUrl == null ? "asdasda" : campList[index].firstImageUrl.toString(),

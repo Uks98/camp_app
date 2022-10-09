@@ -15,7 +15,7 @@ class KeyWordPage extends StatefulWidget {
 }
 
 class _KeyWordPageState extends State<KeyWordPage> {
-  String _noImage = "http://sanpo.pfmall.co.kr/img/no-image.png";
+  static String noImage = "http://sanpo.pfmall.co.kr/img/no-image.png";
   SearchCampApi _searchCampApi = SearchCampApi();
   List<SearchCamp> searchCampList = [];
   WidgetBox _widgetBox = WidgetBox();
@@ -81,7 +81,7 @@ class _KeyWordPageState extends State<KeyWordPage> {
           return _widgetBox.searchCampBox(
               // ignore: unnecessary_null_comparison
               searchCampList[index].firstImageUrl1.toString() == ""
-                  ? _noImage
+                  ? noImage
                   : searchCampList[index].firstImageUrl1.toString(), //썸네일
               searchCampList[index].campName1.toString(),
               searchCampList[index].address1.toString(),
