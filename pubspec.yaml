@@ -41,6 +41,7 @@ dependencies:
   firebase_auth:
   modal_progress_hud_nsn: ^0.3.0
   http:
+  anim_search_bar: ^2.0.2
 
 dev_dependencies:
   flutter_test:

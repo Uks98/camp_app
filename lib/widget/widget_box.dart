@@ -49,10 +49,10 @@ class WidgetBox {
               width: 10,
             ),
             Container(
-              width: 100,
-              height: 100,
+              width: 130,
+              height: 130,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(8),
                 image: DecorationImage(
                     image: NetworkImage(imaUrl), fit: BoxFit.fill),
               ),
@@ -60,31 +60,79 @@ class WidgetBox {
             SizedBox(
               width: 20,
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  location,
-                  style: TextStyle(fontSize: 14, color: ColorBox.textColor),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(x,
-                    style: TextStyle(fontSize: 14, color: ColorBox.textColor)),
-              ],
+            Container(
+              width: 250,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    location.toString(),
+                    style: TextStyle(fontSize: 13, color: ColorBox.textColor),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(x,
+                      style: TextStyle(fontSize: 14, color: ColorBox.textColor)),
+                ],
+              ),
             ),
           ],
         ),
       ],
+    );
+  }
+  Widget searchCampBox(String image,String name, String location,String intro,VoidCallback callback){
+    return GestureDetector(
+      onTap: callback,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 350,
+              height: 350,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                image: DecorationImage(
+                    image: NetworkImage(image), fit: BoxFit.fill),
+              ),
+            ),
+          ),
+          Container(
+            width: 350,
+            margin: EdgeInsets.only(left: 30,top: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 8),
+                Text(name,style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),),
+                SizedBox(height: 10),
+                Text(location,style: TextStyle(color: Colors.grey[800],fontWeight: FontWeight.w500, fontSize: 14),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                ),
+                SizedBox(height: 5),
+                Text(intro,style: TextStyle(color: Colors.grey[800],fontWeight: FontWeight.w500, fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
