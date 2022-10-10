@@ -53,9 +53,6 @@ class _MainCampState extends State<MainCamp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: getCampData,
-      ),
         body: ListView.separated(
             shrinkWrap: false,
             itemBuilder: (context, index) {

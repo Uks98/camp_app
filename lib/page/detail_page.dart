@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:camper/data/camp_data.dart';
+import 'package:camper/page/review_page.dart';
 import 'package:camper/page/search_keyword_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   String _noImage = "http://sanpo.pfmall.co.kr/img/no-image.png";
+  var ids;
   CampItem _campItem = CampItem();
   CampData get campDataG{
     return widget.campData;
@@ -31,6 +33,7 @@ class _DetailPageState extends State<DetailPage> {
   }
   @override
   Widget build(BuildContext context) {
+    ids = ModalRoute.of(context)!.settings.arguments.toString();
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -70,7 +73,12 @@ class _DetailPageState extends State<DetailPage> {
                       SizedBox(height: 10,),
                       Text(campDataG.campName.toString(),style: TextStyle(fontSize: 20),),
                       SizedBox(height: 10,),
-                      Text("리뷰 수 ",style: TextStyle(fontSize: 18),),
+                      TextButton(onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ReviewPage(
+                          campData: CampData(campId: campDataG.campId),
+                          id: ids!,
+                        )));
+                      }, child: Text("리뷰 수 ",style: TextStyle(fontSize: 18),),),
                       SizedBox(height: 10,),
                       Text(campDataG.address.toString(),style: TextStyle(fontSize: 14,color: Colors.grey[700]),),
                       SizedBox(height: 10,),
