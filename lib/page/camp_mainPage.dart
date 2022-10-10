@@ -34,6 +34,16 @@ class _MainCampState extends State<MainCamp> {
     campList = (await campApi.getCampList(context: context))!;
     setState(() {});
   }
+
+  void getCategory(int index){
+    if(index == 0){
+      _keyword = "카라반";
+    }else if(index == 1){
+      _keyword = "글램핑";
+    }else{
+      _keyword = "오토캠핑";
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -52,7 +62,7 @@ class _MainCampState extends State<MainCamp> {
               if(index == 0){
                 return Container(
                   margin: EdgeInsets.only(top: 25,left: 20,bottom: 8),
-                  child: Text("캠핑장",style: TextStyle(fontSize: 25,),));
+                  child: Text("The Camp",style: TextStyle(fontSize: 25,),));
               }else if(index == 1){
                 return Container(
                   width: 400,
@@ -67,13 +77,7 @@ class _MainCampState extends State<MainCamp> {
                           SizedBox(height: 5,),
                           GestureDetector(
                             onTap: (){
-                              if(index == 0){
-                                _keyword = "카라반";
-                              }else if(index == 1){
-                                _keyword = "글램핑";
-                              }else{
-                                _keyword = "오토캠핑";
-                              }
+                              getCategory(index);
                               Navigator.of(context).push(MaterialPageRoute(builder: (context)=>KeyWordPage(keyword: _keyword)));
                             },
                             child: Image.asset(
@@ -96,7 +100,38 @@ class _MainCampState extends State<MainCamp> {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
                       DetailPage(
                         campData: CampData(
-                          campId: campList[index].campId,
+                            campName: campList[index].campName,
+                            campId: campList[index].campId,
+                            insrncAt : campList[index].insrncAt,
+                            feather : campList[index].feather,
+                            address : campList[index].address,
+                            mapx : campList[index].mapx,
+                            mapy : campList[index].mapy,
+                            tel : campList[index].tel,
+                            homePage : campList[index].homePage,
+                            resveUrl : campList[index].resveUrl,
+                            nomalSite : campList[index].nomalSite,
+                            autoSiteCo : campList[index].autoSiteCo,
+                            glamping : campList[index].glamping,
+                            caravSite : campList[index].caravSite,
+                            glamInside : campList[index].glamInside,
+                            caravanInside : campList[index].caravanInside,
+                            operPd : campList[index].operPd,
+                            operDay : campList[index].operDay,
+                            intro : campList[index].intro,
+                            mainIntro : campList[index].mainIntro,
+                            firstImageUrl : campList[index].firstImageUrl,
+                            toilet : campList[index].toilet,
+                            shower : campList[index].shower,
+                            wtrplCo : campList[index].wtrplCo,
+                            freeCon : campList[index].freeCon,
+                            freeCon2 : campList[index].freeCon2,
+                            posblFcltyCl : campList[index].posblFcltyCl,
+                            ProgrmBool : campList[index].ProgrmBool,
+                            ProgrmName : campList[index].ProgrmName,
+                            extshrCo : campList[index].extshrCo,
+                            fireSensorCo : campList[index].fireSensorCo,
+                            thema : campList[index].thema,
                         ),
                       )
                   ));
@@ -105,7 +140,7 @@ class _MainCampState extends State<MainCamp> {
                     campList[index].firstImageUrl == null ? "asdasda" : campList[index].firstImageUrl.toString(),
                     campList[index].campName.toString(),
                     campList[index].address.toString(),
-                    "이름"),
+                  campList[index].intro.toString(),),
               );
             },
             separatorBuilder: (ctx, idx) {

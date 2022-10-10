@@ -84,7 +84,7 @@ class WidgetBox {
                     height: 20,
                   ),
                   Text(x,
-                      style: TextStyle(fontSize: 14, color: ColorBox.textColor)),
+                      style: TextStyle(fontSize: 13, color: ColorBox.textColor)),
                 ],
               ),
             ),
