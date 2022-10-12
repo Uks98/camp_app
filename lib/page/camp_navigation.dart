@@ -48,6 +48,10 @@ class _CampNavigationState extends State<CampNavigation> {
               icon: Icon(Icons.people),
               label: '마이페이지',
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: '마이페이지',
+            ),
           ],
           currentIndex: _selectIndex, // 지정 인덱스로 이동
           selectedItemColor: Colors.lightGreen,
