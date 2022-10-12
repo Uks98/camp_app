@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../color/color.dart';
 import '../widget/widget_box.dart';
-import 'main_camp_page.dart';
+import 'camp_navigation.dart';
 
 class LoginSignupScreen extends StatefulWidget {
   @override
@@ -51,7 +51,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
 
       if (result != null) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainCamp()));
+            context, MaterialPageRoute(builder: (context) => CampNavigation()));
       }  // if result not null we simply call the MaterialpageRoute,
       // for go to the HomePage screen
     }
@@ -366,7 +366,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
 
                                 if (newUser.user != null) {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => MainCamp()));
+                                      builder: (context) => CampNavigation()));
                                 }
                               } catch (error) {
                                 print(error);
@@ -388,7 +388,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                 );
                                 if (newUser.user != null) {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => MainCamp()));
+                                      builder: (context) => CampNavigation()));
 
                                 }
                               } catch (error) {
@@ -440,7 +440,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
 
                                 if (newUser.user != null) {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => MainCamp()));
+                                      builder: (context) => CampNavigation()));
                                 }
 
                               } catch (error) {
@@ -462,7 +462,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                 );
                                 if (newUser.user != null) {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => MainCamp()));
+                                      builder: (context) => CampNavigation()));
                                 }
                               } catch (error) {
                                 print(error);

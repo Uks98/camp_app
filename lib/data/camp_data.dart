@@ -37,6 +37,6 @@ String? extshrCo;
  String? fireSensorCo;
 //화재감지기 개수
   String? thema; //테마환경
- CampData({required this.add,required this.autoSiteCo});
 }
 
+CampData({required});
