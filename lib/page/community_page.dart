@@ -1,5 +1,14 @@
-import 'dart:io';
+//게시판 이미지 해결ㅠ
 
+//파이어스토어 set함수를 이용해 imagePicker에서 가져온 사진경로를 저장한다
+//다음 작성하기 란에서 get 지역변수를 활용해 collection에 접근해 내가 원하는 속성값에 접근한다
+//snapshot data의 doc에 길이를 지정한 리스트 뷰를 만들고 각 인덱스 값에 접근해 한 유저가 지정한 이미지가
+//다른 유저의 이미지도 변경시키는 상황을 해결했다.
+
+
+
+
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 class Community extends StatefulWidget {
-  const Community({Key? key}) : super(key: key);
+   Community({Key? key}) : super(key: key);
 
   @override
   State<Community> createState() => _CommunityState();
@@ -15,28 +24,26 @@ class Community extends StatefulWidget {
 
 class _CommunityState extends State<Community> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
+  void pickedImageFunc(File image) {
+    pickedImage = image;
+  }
   File? pickedImage;
   DocumentSnapshot? documentSnapshot;
-  String? url;
   final user = FirebaseAuth.instance.currentUser;
-
-  void _pickImage() async {
-    final imagePicker = ImagePicker();
-    final pickedImageFile = await imagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50, maxHeight: 150);
+  final picker = ImagePicker();
+  Future _getImage() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, maxWidth: 650, maxHeight: 100);
+    // 사진의 크기를 지정 650*100 이유: firebase는 유료이다.
     setState(() {
-      if (pickedImageFile != null) {
-        pickedImage = File(pickedImageFile.path);
-      }
+      pickedImage = File(pickedFile!.path);
     });
-    addImageFun(pickedImage!);
   }
 
-  void addImageFun(File pickedImage) {}
+
 
   // 컬렉션명
-   String colName = "FirstDemo";
+   String colName = "post";
 
   // 필드명
   final String fnName = "name";
@@ -46,7 +53,7 @@ class _CommunityState extends State<Community> {
   final String userId = "userId";
   final String userImage = 'userImage';
    int _likeIndex = 0;
-
+  String? url;
   TextEditingController _newNameCon = TextEditingController();
   TextEditingController _locationController = TextEditingController();
   TextEditingController _undNameCon = TextEditingController();
@@ -58,7 +65,6 @@ class _CommunityState extends State<Community> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(url);
   }
 
   @override
@@ -81,130 +87,48 @@ class _CommunityState extends State<Community> {
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
+                    final docsList = snapshot.data!.docs;
                     if (snapshot.hasError)
                       return Text("Error: ${snapshot.error}");
-                    else {
+                    else if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );}else {
                       return snapshot.data != null
-                          ? ListView(
-                        children: snapshot.data!.docs
-                            .map((DocumentSnapshot document) {
-                          DateTime dt = DateTime.now();
-                          final time = DateFormat("yyyy/MM/dd일 HH시 mm분")
-                              .format(dt);
-                          return GestureDetector(
-                            onTap: () {
-                              showUpdateOrDeleteDocDialog(
-                                  document);
-                            },
-                            child: Card(
-                              elevation: 3,
-                              child: Container(
-                                padding: const EdgeInsets.all(3),
-                                child: Row(
-                                  children: <Widget>[
-                                    pickedImage != null
-                                        ? Padding(
-                                      padding: const EdgeInsets.only(top: 15.0),
-                                      child: ClipRRect(
-                                        child: Container(
-                                          child: Image.file(
-                                            File(pickedImage!
-                                                .path),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          width: 150,
-                                          height: 150,
-                                        ),
-                                        borderRadius:
-                                        BorderRadius.circular(
-                                            30),
-                                      ),
-                                    )
-                                        : Container(
-                                      color: Colors.redAccent,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 19.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            height: 30,
-                                          ),
-                                          Text(
-                                            document["name"],
-                                            style: const TextStyle(
-                                              color: Colors.blueGrey,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          SizedBox(height: 5,),
-                                          Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              '위치: ${document["location"]}',
-                                              style: const TextStyle(
-                                                  color: Colors.black54,fontSize: 17),
-                                            ),
-                                          ),
-                                          SizedBox(height: 5,),
-                                          Container(
-                                            width: 200,
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              '${document["content"]}',
-                                              style: const TextStyle(
-                                                color: Colors.black54,fontSize: 15,),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 10,
-                                            ),
-                                          ),
-                                          SizedBox(height: 5,),
-                                          Container(
-                                            width: 200,
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              '${document["userId"]}',
-                                              style: const TextStyle(
-                                                color: Colors.black54,fontSize: 15,),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 10,
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 200,
-                                            child: Text(
-                                              time,
-                                              style: TextStyle(
-                                                  color: Colors.grey[600]),
-                                            ),
-                                          ),
-                                          document["userId"] == user!.uid ? Column(
-                                            children: [
-                                            GestureDetector(
-                                              onTap : (){
-                                                setState((){
-                                                  updateDoc(doc: document, count: _likeIndex + 1);
-                                                });
-                                                print(_likeIndex);
-                                              },
-                                                child: Icon(Icons.abc,size: 40,)),
-                                              Text(_likeIndex.toString()),
-                                            ],
-                                          ) : Container()
-                                        ],
-                                      ),
-                                    ),
-
+                          ? ListView.builder(
+                          itemCount: docsList.length,
+                          itemBuilder: (context,index){
+                            return Stack(
+                              children: [
+                                Container(color: Colors.grey[900],),
+                                Column(
+                                  children: [
+                                    Text(docsList[index]["name"]),
+                                    Text(docsList[index]["location"]),
+                                    SizedBox(height: 20,),
+                                    Text(docsList[index]["userId"]),
                                   ],
                                 ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      )
-                          : const LinearProgressIndicator();
+                                docsList[index]["image_urls"] != null
+                                    ? Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: ClipRRect(
+                                    child: Container(
+                                      child: docsList[index]["image_urls"] == null ? Container() : Image.network(docsList[index]["image_urls"]),
+                                      width: 150,
+                                      height: 150,
+                                    ),
+                                    borderRadius:
+                                    BorderRadius.circular(
+                                        30),
+                                  ),
+                                )
+                                    : Container(
+                                  color: Colors.redAccent,
+                                ),
+                              ],
+                            );
+                      }) : const LinearProgressIndicator();
                     }
                   }),
             ),
@@ -215,17 +139,18 @@ class _CommunityState extends State<Community> {
   }
 
   void createDoc(String name, String description, String content) async {
-    //final userData =  await FirebaseFirestore.instance.collection(colName).doc(user!.uid).get();
+    final userData =  await FirebaseFirestore.instance.collection(colName).doc(user!.uid).get();
     FirebaseFirestore.instance.collection(colName).add({
       fnName: name,
       fnDescription: description,
       fnDatetime: Timestamp.now(),
       userId: user!.uid,
-      'picked_image': url,
       'content': content,
       'like' : _likeIndex,
+      'image_urls' : userData["imageUrl"],
       //userImage: userData['picked_image']
     });
+    print(userData["imageUrl"]);
   }
 
 
@@ -291,18 +216,21 @@ class _CommunityState extends State<Community> {
                 onPressed: () {
                   if (_locationController.text.isNotEmpty &&
                       _newNameCon.text.isNotEmpty) {
-                    createDoc(_newNameCon.text, _locationController.text, _contentController.text);
+                     createDoc(_newNameCon.text, _locationController.text, _contentController.text);
                   }
                   _newNameCon.clear();
                   _locationController.clear();
                   _contentController.clear();
+
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(primary: Color(0xff6A67CE)),
               ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Color(0xffB689C0)),
-                  onPressed: _pickImage,
+                  onPressed: ()async{
+                    _getImage().then((value) => _uploadFile(context));
+                  },
                   child: Text("이미지 추가"))
             ],
           ),
@@ -330,81 +258,109 @@ class _CommunityState extends State<Community> {
       );
   }
 
-  void showUpdateOrDeleteDocDialog(DocumentSnapshot doc) {
-    _undNameCon.text = doc[fnName];
-    _undDescCon.text = doc[fnDescription];
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("수정 및 삭제하기"),
-          content: Container(
-            height: 200,
-            child: Column(
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(labelText: "Name"),
-                  controller: _undNameCon,
-                ),
-                TextField(
-                  decoration: InputDecoration(labelText: "Description"),
-                  controller: _undDescCon,
-                )
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              child: Text("취소"),
-              onPressed: () {
-                _undNameCon.clear();
-                _undDescCon.clear();
-                Navigator.pop(context);
-              },
-            ),
-            ElevatedButton(
-              child: Text("업데이트"),
-              onPressed: () {
-                if (_undNameCon.text.isNotEmpty &&
-                    _undDescCon.text.isNotEmpty) {
-                  FirebaseFirestore.instance.collection(colName).doc(doc.id).update({
-                    fnName: _newNameCon.text,
-                    fnDescription: _locationController.text,
-                    'content' : _contentController.text,
-                  });
-                  //updateDoc(doc: documentSnapshot.id, description:_undNameCon.text,content :_contentController.text, description: _undDescCon.text, name: '');
-                }
-                Navigator.pop(context);
-              },
-            ),
-            ElevatedButton(
-              child: Text("삭제"),
-              onPressed: () {
-                FirebaseFirestore.instance.collection(colName).doc(doc.id).delete();
-                Navigator.pop(context);
-              },
-            ),
-            ElevatedButton(
-              child: Text("이미지 추가하기"),
-              onPressed: () async {
-                //이미지가 저장되는 클라우드 경로에 접근가능메서드
-                final refImage = FirebaseStorage.instance
-                    .ref()
-                    .child('picked_image')
-                    .child(user!.uid.toString() + '.png');
-                await refImage.putFile(pickedImage!);
-                url = await refImage.getDownloadURL();
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
+  // void showUpdateOrDeleteDocDialog(DocumentSnapshot doc) {
+  //   _undNameCon.text = doc[fnName];
+  //   _undDescCon.text = doc[fnDescription];
+  //   showDialog(
+  //     barrierDismissible: false,
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: Text("수정 및 삭제하기"),
+  //         content: Container(
+  //           height: 200,
+  //           child: Column(
+  //             children: <Widget>[
+  //               TextField(
+  //                 decoration: InputDecoration(labelText: "Name"),
+  //                 controller: _undNameCon,
+  //               ),
+  //               TextField(
+  //                 decoration: InputDecoration(labelText: "Description"),
+  //                 controller: _undDescCon,
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           ElevatedButton(
+  //             child: Text("취소"),
+  //             onPressed: () {
+  //               _undNameCon.clear();
+  //               _undDescCon.clear();
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //           ElevatedButton(
+  //             child: Text("업데이트"),
+  //             onPressed: () {
+  //               if (_undNameCon.text.isNotEmpty &&
+  //                   _undDescCon.text.isNotEmpty) {
+  //                 FirebaseFirestore.instance.collection(colName).doc(doc.id).update({
+  //                   fnName: _newNameCon.text,
+  //                   fnDescription: _locationController.text,
+  //                   'content' : _contentController.text,
+  //                 });
+  //                 //updateDoc(doc: documentSnapshot.id, description:_undNameCon.text,content :_contentController.text, description: _undDescCon.text, name: '');
+  //               }
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //           ElevatedButton(
+  //             child: Text("삭제"),
+  //             onPressed: () {
+  //               FirebaseFirestore.instance.collection(colName).doc(doc.id).delete();
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //           ElevatedButton(
+  //             child: Text("이미지 추가하기"),
+  //             onPressed: () async {
+  //               _uploadFile(context);
+  //               //이미지가 저장되는 클라우드 경로에 접근가능메서드
+  //               // final refImage = FirebaseStorage.instance.ref().child('user_image').child(user!.uid.toString() + 'png');
+  //               // await refImage.putFile(pickedImage!);
+  //               // url = await refImage.getDownloadURL();
+  //             },
+  //           )
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   String timestampToStrDateTime(Timestamp ts) {
     return DateTime.fromMicrosecondsSinceEpoch(ts.microsecondsSinceEpoch)
         .toString();
+  }
+
+  Future _uploadFile(BuildContext context) async {
+    try {
+      final firebaseStorageRef = FirebaseStorage.instance
+          .ref()
+          .child('picture')
+          .child('${DateTime.now().millisecondsSinceEpoch}.png');
+
+      // 파일 업로드
+      final uploadTask = firebaseStorageRef.putFile(
+          pickedImage!, SettableMetadata(contentType: 'image/png'));
+
+      // 완료까지 기다림
+      await uploadTask.whenComplete(() => null);
+
+      // 업로드 완료 후 url
+      final downloadUrl = await firebaseStorageRef.getDownloadURL();
+
+      // 문서 작성
+      await FirebaseFirestore.instance.collection(colName).doc(user!.uid).set({
+        'imageUrl': downloadUrl,
+        'userPhotoUrl': pickedImage!.path
+      });
+    } catch (e) {
+      print(e);
+    }
+
+    // 완료 후 앞 화면으로 이동
+    Navigator.pop(context);
   }
 }
