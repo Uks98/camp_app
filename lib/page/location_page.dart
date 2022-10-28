@@ -20,7 +20,7 @@ class _LocationPageState extends State<LocationPage> {
   List<LocationCampData> locationData = []; // Futuer list<LocationMapData>에서 반환한 리스트 받아오기
 
   Future<void> _onMapCreated(GoogleMapController controller) async {
-    final googleOffices1 = await  location_Marker.getGoogleOffices2();
+    final googleOffices1 = await location_Marker.getGoogleOffices2();
     setState(() {
       _markers.clear();
       for (final office in googleOffices1.offices1!) {
@@ -39,29 +39,24 @@ class _LocationPageState extends State<LocationPage> {
     super.initState();
     print("위도 : ${LocationClass.latitude}");
     print(LocationClass.longitude);
-    getLocationCampData();
+    _onMapCreated;
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: LocationClass.longitude && LocationClass.longitude == null ?
+      Container(
               width: 400,
               height: 400,
               child: GoogleMap(
                 mapType: MapType.normal,
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: CameraPosition(
-                  target: LatLng(36.0345423,128.6142847),
+                  target: LatLng(LocationClass.latitude,LocationClass.longitude),
                   zoom: 14,
                 ),
                 markers: _markers.values.toSet(),
               ),
-            )
-    );
-  }
-  void getLocationCampData() async {
-    locationData = (await _locationCampData.getLocationCampList(
-        context: context))!;
-    setState(() {});
+    ) : CircularProgressIndicator());
   }
 }

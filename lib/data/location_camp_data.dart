@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:camper/service/location.dart';
 import 'package:http/http.dart' as http;
 class LocationCampData {
   String? campId1; //캠핑장 고유 아이디
@@ -127,10 +128,11 @@ class LocationMarkerInfo {
 }
 
 Future<LocationMarkerInfo> getGoogleOffices2() async {
-  String _x = 128.6142847.toString();
-  String _y = 36.0345423.toString();
+  String _x = LocationClass.latitude.toString();
+  String _y =LocationClass.longitude.toString();
   String _key = "iwOI%2BU0JCUIMem0fddRQ9Y4Fj2E254wSmoXLGM3hVwqHiS8h12%2FqNozM62Kb5D4ihpeW4KWouAt%2B9djISlDJzw%3D%3D";
-  var googleLocationsURL = 'https://apis.data.go.kr/B551011/GoCamping/locationBasedList?serviceKey=$_key&numOfRows=10&pageNo=1&MobileOS=AND&MobileApp=App&_type=json&mapX=$_x&mapY=$_y&radius=20000';
+  // 위도 경도가 서로 다름..
+  var googleLocationsURL = 'https://apis.data.go.kr/B551011/GoCamping/locationBasedList?serviceKey=$_key&numOfRows=10&pageNo=1&MobileOS=AND&MobileApp=App&_type=json&mapX=$_y&mapY=$_x&radius=20000';
   final response = await http.get(Uri.parse(googleLocationsURL));
   if (response.statusCode == 200) {
     print("body : ${response.body}");
