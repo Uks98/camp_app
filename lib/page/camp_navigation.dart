@@ -6,6 +6,8 @@ import 'package:camper/widget/decoration.dart';
 import 'package:camper/widget/widget_box.dart';
 import 'package:flutter/material.dart';
 
+import '../service/location.dart';
+
 class CampNavigation extends StatefulWidget {
   const CampNavigation({Key? key}) : super(key: key);
 
@@ -15,6 +17,7 @@ class CampNavigation extends StatefulWidget {
 
 class _CampNavigationState extends State<CampNavigation> {
   int _selectIndex = 0;
+  LocationClass _locationClass = LocationClass();
   final List<Widget> _widgetOptions = <Widget>[
     MainCamp(),
     LocationPage(),
@@ -33,6 +36,13 @@ class _CampNavigationState extends State<CampNavigation> {
       _selectIndex = index;
     });
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _locationClass.getLocation(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

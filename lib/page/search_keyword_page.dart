@@ -1,4 +1,3 @@
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:camper/service/search_api_http.dart';
 import 'package:camper/widget/widget_box.dart';
 import 'package:flutter/material.dart';
