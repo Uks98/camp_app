@@ -135,4 +135,30 @@ class WidgetBox {
       ),
     );
   }
+  PersistentBottomSheetController<void> showBottomInfo(BuildContext context,String name){
+    return  Scaffold.of(context).showBottomSheet<void>(
+            (BuildContext context) {
+          return Container(
+            height: 100,
+            color: Colors.amber,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                   Text(name),
+                  ElevatedButton(
+                    child: const Text('Close BottomSheet'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
 }
+
+

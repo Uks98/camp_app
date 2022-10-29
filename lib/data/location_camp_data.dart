@@ -137,7 +137,7 @@ Future<LocationMarkerInfo> getGoogleOffices2() async {
   if (response.statusCode == 200) {
     print("body : ${response.body}");
     //Map<String,dynamic>형식으로 저장
-    return LocationMarkerInfo.fromJson(json.decode(response.body));
+    return LocationMarkerInfo.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); //한글깨짐수정
   } else {
     throw HttpException(
         'Unexpected status code ${response.statusCode}:'
