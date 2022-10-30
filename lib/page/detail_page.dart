@@ -109,8 +109,8 @@ class _DetailPageState extends State<DetailPage> {
                       Text("캠핑장 설명",style: TextStyle(fontSize: 18,),),
                       SizedBox(height: 20,),
                       Container(
-                          margin: EdgeInsets.only(left: 5,right: 15),
-                          child: Text(campDataG.mainIntro.toString(),style: TextStyle(fontSize: 14,letterSpacing: 1.0,fontWeight: FontWeight.w200))),
+                          margin: EdgeInsets.only(left: 0,right: 15),
+                          child: Text(campDataG.mainIntro.toString(),style: TextStyle(fontSize: 14,letterSpacing: 1.1,fontWeight: FontWeight.w200,color: Colors.grey[700]))),
                       SizedBox(height: 20,),
                       Divider(thickness: 1,endIndent: 30,indent: 5,),
                       SizedBox(height: 20,),
@@ -143,7 +143,6 @@ class _DetailPageState extends State<DetailPage> {
                       Text("프로그램 및 활동",style: TextStyle(fontSize: 18,),),
                       SizedBox(height: 20,),
                       _campItem.kindOfActivity(campDataG.freeCon2.toString(),campDataG.posblFcltyCl.toString())
-
                     ],
                   ),
                 )

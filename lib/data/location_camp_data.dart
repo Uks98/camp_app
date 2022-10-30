@@ -110,29 +110,27 @@ class LocationCampData {
 }
 
 class LocationMarkerInfo {
-  //ItemList => 위도 경도 담고있는 클래스
   List<LocationCampData>? offices1;
 
   LocationMarkerInfo({required this.offices1});
 
   LocationMarkerInfo.fromJson(Map<String, dynamic> json) {
+    offices1 = <LocationCampData>[];
     //해당 키 값에 접근하기 위해 작성
     if (json["response"]["body"]["items"]["item"] != null) {
-      offices1 = <LocationCampData>[];
       json["response"]["body"]["items"]["item"].forEach((v) {
-        offices1!.add(new LocationCampData.fromJson(v));
+        offices1!.add(LocationCampData.fromJson(v));
       });
     }
-    print("office : ${offices1}");
   }
 }
 
 Future<LocationMarkerInfo> getGoogleOffices2() async {
-  String _x = LocationClass.latitude.toString();
-  String _y =LocationClass.longitude.toString();
+  //String _x = latitude.toString();
+  //String _y = longitude.toString();
   String _key = "iwOI%2BU0JCUIMem0fddRQ9Y4Fj2E254wSmoXLGM3hVwqHiS8h12%2FqNozM62Kb5D4ihpeW4KWouAt%2B9djISlDJzw%3D%3D";
   // 위도 경도가 서로 다름..
-  var googleLocationsURL = 'https://apis.data.go.kr/B551011/GoCamping/locationBasedList?serviceKey=$_key&numOfRows=10&pageNo=1&MobileOS=AND&MobileApp=App&_type=json&mapX=$_y&mapY=$_x&radius=20000';
+  var googleLocationsURL = 'https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=80&pageNo=1&MobileOS=AND&MobileApp=AAA&serviceKey=$_key&_type=json';
   final response = await http.get(Uri.parse(googleLocationsURL));
   if (response.statusCode == 200) {
     print("body : ${response.body}");

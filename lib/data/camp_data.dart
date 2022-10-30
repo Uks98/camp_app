@@ -90,7 +90,7 @@ class CampData {
         operDay: data["operDeCl"].toString(),
         intro: data["lineIntro"].toString(),
         mainIntro: data["intro"].toString(),
-        firstImageUrl: data["firstImageUrl"].toString(),
+        firstImageUrl: data["firstImageUrl"] != "" ? data["firstImageUrl"].toString() : "http://sanpo.pfmall.co.kr/img/no-image.png",
         toilet: data["toiletCo"].toString(),
         shower: data["swrmCo"].toString(),
         wtrplCo: data["wtrplCo"].toString(),
