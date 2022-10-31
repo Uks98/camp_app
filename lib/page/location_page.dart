@@ -115,7 +115,7 @@ class _LocationPageState extends State<LocationPage> {
               padding: const EdgeInsets.only(top: 10.0,left: 10),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                height:40,
+                height:35,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context,index){

@@ -49,6 +49,7 @@ dependencies:
   intl:
   google_maps_flutter: ^2.2.1
   geolocator: ^8.2.0
+  sliding_up_panel: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

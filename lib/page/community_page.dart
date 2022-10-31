@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 class Community extends StatefulWidget {
-   Community({Key? key}) : super(key: key);
+  Community({Key? key}) : super(key: key);
 
   @override
   State<Community> createState() => _CommunityState();
@@ -28,11 +28,12 @@ class _CommunityState extends State<Community> {
     pickedImage = image;
   }
   File? pickedImage;
+  String downloadUrl = "a";
   DocumentSnapshot? documentSnapshot;
   final user = FirebaseAuth.instance.currentUser;
   final picker = ImagePicker();
   Future _getImage() async {
-    final pickedFile = await picker.getImage(
+    final pickedFile = await picker.pickImage(
         source: ImageSource.gallery, maxWidth: 650, maxHeight: 100);
     // 사진의 크기를 지정 650*100 이유: firebase는 유료이다.
     setState(() {
@@ -40,10 +41,58 @@ class _CommunityState extends State<Community> {
     });
   }
 
+  Future _uploadFile(BuildContext context,String url) async {
+    try {
+      final firebaseStorageRef = FirebaseStorage.instance
+          .ref()
+          .child('picture')
+          .child('${DateTime.now().millisecondsSinceEpoch}.png');
 
+      // 파일 업로드
+      final uploadTask = firebaseStorageRef.putFile(
+          pickedImage!, SettableMetadata(contentType: 'image/png'));
+
+      // 완료까지 기다림
+      await uploadTask.whenComplete(() => null);
+
+      // 업로드 완료 후 url
+      if(firebaseStorageRef.getDownloadURL() == false){
+        downloadUrl = "";
+      }else{
+        downloadUrl = await firebaseStorageRef.getDownloadURL();
+
+      }
+      // 문서 작성
+      createDoc(fnName, fnDescription, content,downloadUrl);
+     // await FirebaseFirestore.instance.collection(colName).doc(user!.uid).set({
+     //   'imageUrl': downloadUrl,
+     //   'userPhotoUrl': pickedImage!.path
+     // });
+    } catch (e) {
+      print(e);
+    }
+
+    // 완료 후 앞 화면으로 이동
+    Navigator.pop(context);
+    print("down load ${downloadUrl}");
+  }
+
+  void createDoc(String name, String description, String content,String imageUrl) async {
+    //final userData =  await FirebaseFirestore.instance.collection(colName).doc(user!.uid).get();
+    FirebaseFirestore.instance.collection(colName).add({
+      fnName: name,
+      fnDescription: description,
+      fnDatetime: Timestamp.now(),
+      userId: user!.uid,
+      content : content,
+      'image_urls' : imageUrl,
+      //userImage: userData['picked_image']
+    });
+   // print(userData["imageUrl"]);
+  }
 
   // 컬렉션명
-   String colName = "post";
+  String colName = "post";
 
   // 필드명
   final String fnName = "name";
@@ -51,8 +100,9 @@ class _CommunityState extends State<Community> {
   final String fnDatetime = "datetime";
   final String imageUrl = "imageUrl";
   final String userId = "userId";
+  final String content = "content";
   final String userImage = 'userImage';
-   int _likeIndex = 0;
+  int _likeIndex = 0;
   String? url;
   TextEditingController _newNameCon = TextEditingController();
   TextEditingController _locationController = TextEditingController();
@@ -109,12 +159,12 @@ class _CommunityState extends State<Community> {
                                     Text(docsList[index]["userId"]),
                                   ],
                                 ),
-                                docsList[index]["image_urls"] != null
+                                downloadUrl !=null
                                     ? Padding(
                                   padding: const EdgeInsets.only(top: 15.0),
                                   child: ClipRRect(
                                     child: Container(
-                                      child: docsList[index]["image_urls"] == null ? Container() : Image.network(docsList[index]["image_urls"]),
+                                      child:  downloadUrl == null ? Container() : Image.network( docsList[index]["image_urls"]),
                                       width: 150,
                                       height: 150,
                                     ),
@@ -128,7 +178,7 @@ class _CommunityState extends State<Community> {
                                 ),
                               ],
                             );
-                      }) : const LinearProgressIndicator();
+                          }) : const LinearProgressIndicator();
                     }
                   }),
             ),
@@ -138,20 +188,7 @@ class _CommunityState extends State<Community> {
     );
   }
 
-  void createDoc(String name, String description, String content) async {
-    final userData =  await FirebaseFirestore.instance.collection(colName).doc(user!.uid).get();
-    FirebaseFirestore.instance.collection(colName).add({
-      fnName: name,
-      fnDescription: description,
-      fnDatetime: Timestamp.now(),
-      userId: user!.uid,
-      'content': content,
-      'like' : _likeIndex,
-      'image_urls' : userData["imageUrl"],
-      //userImage: userData['picked_image']
-    });
-    print(userData["imageUrl"]);
-  }
+
 
 
   // 문서 갱신 (Update)
@@ -216,7 +253,7 @@ class _CommunityState extends State<Community> {
                 onPressed: () {
                   if (_locationController.text.isNotEmpty &&
                       _newNameCon.text.isNotEmpty) {
-                     createDoc(_newNameCon.text, _locationController.text, _contentController.text);
+                    _uploadFile(context,downloadUrl);
                   }
                   _newNameCon.clear();
                   _locationController.clear();
@@ -229,7 +266,7 @@ class _CommunityState extends State<Community> {
               ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Color(0xffB689C0)),
                   onPressed: ()async{
-                    _getImage().then((value) => _uploadFile(context));
+                    _getImage();
                   },
                   child: Text("이미지 추가"))
             ],
@@ -258,109 +295,5 @@ class _CommunityState extends State<Community> {
       );
   }
 
-  // void showUpdateOrDeleteDocDialog(DocumentSnapshot doc) {
-  //   _undNameCon.text = doc[fnName];
-  //   _undDescCon.text = doc[fnDescription];
-  //   showDialog(
-  //     barrierDismissible: false,
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         title: Text("수정 및 삭제하기"),
-  //         content: Container(
-  //           height: 200,
-  //           child: Column(
-  //             children: <Widget>[
-  //               TextField(
-  //                 decoration: InputDecoration(labelText: "Name"),
-  //                 controller: _undNameCon,
-  //               ),
-  //               TextField(
-  //                 decoration: InputDecoration(labelText: "Description"),
-  //                 controller: _undDescCon,
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           ElevatedButton(
-  //             child: Text("취소"),
-  //             onPressed: () {
-  //               _undNameCon.clear();
-  //               _undDescCon.clear();
-  //               Navigator.pop(context);
-  //             },
-  //           ),
-  //           ElevatedButton(
-  //             child: Text("업데이트"),
-  //             onPressed: () {
-  //               if (_undNameCon.text.isNotEmpty &&
-  //                   _undDescCon.text.isNotEmpty) {
-  //                 FirebaseFirestore.instance.collection(colName).doc(doc.id).update({
-  //                   fnName: _newNameCon.text,
-  //                   fnDescription: _locationController.text,
-  //                   'content' : _contentController.text,
-  //                 });
-  //                 //updateDoc(doc: documentSnapshot.id, description:_undNameCon.text,content :_contentController.text, description: _undDescCon.text, name: '');
-  //               }
-  //               Navigator.pop(context);
-  //             },
-  //           ),
-  //           ElevatedButton(
-  //             child: Text("삭제"),
-  //             onPressed: () {
-  //               FirebaseFirestore.instance.collection(colName).doc(doc.id).delete();
-  //               Navigator.pop(context);
-  //             },
-  //           ),
-  //           ElevatedButton(
-  //             child: Text("이미지 추가하기"),
-  //             onPressed: () async {
-  //               _uploadFile(context);
-  //               //이미지가 저장되는 클라우드 경로에 접근가능메서드
-  //               // final refImage = FirebaseStorage.instance.ref().child('user_image').child(user!.uid.toString() + 'png');
-  //               // await refImage.putFile(pickedImage!);
-  //               // url = await refImage.getDownloadURL();
-  //             },
-  //           )
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  String timestampToStrDateTime(Timestamp ts) {
-    return DateTime.fromMicrosecondsSinceEpoch(ts.microsecondsSinceEpoch)
-        .toString();
-  }
-
-  Future _uploadFile(BuildContext context) async {
-    try {
-      final firebaseStorageRef = FirebaseStorage.instance
-          .ref()
-          .child('picture')
-          .child('${DateTime.now().millisecondsSinceEpoch}.png');
-
-      // 파일 업로드
-      final uploadTask = firebaseStorageRef.putFile(
-          pickedImage!, SettableMetadata(contentType: 'image/png'));
-
-      // 완료까지 기다림
-      await uploadTask.whenComplete(() => null);
-
-      // 업로드 완료 후 url
-      final downloadUrl = await firebaseStorageRef.getDownloadURL();
-
-      // 문서 작성
-      await FirebaseFirestore.instance.collection(colName).doc(user!.uid).set({
-        'imageUrl': downloadUrl,
-        'userPhotoUrl': pickedImage!.path
-      });
-    } catch (e) {
-      print(e);
-    }
-
-    // 완료 후 앞 화면으로 이동
-    Navigator.pop(context);
-  }
-}
+  DateTime timestampToStrDateTime(Timestamp ts) {
+    return DateTime.fromMicrosecondsSinceEpoch(ts.microsecondsSinceEpoch);}}

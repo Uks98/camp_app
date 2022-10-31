@@ -49,19 +49,19 @@ class _CampNavigationState extends State<CampNavigation> {
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.text_snippet),
-              label: '나의 판매글',
+              icon: Icon(Icons.home_filled),
+              label: '홈',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: '홈',
+              icon: Icon(Icons.map),
+              label: '캠핑 지도',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.people),
               label: '커뮤니티',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.people),
+              icon: Icon(Icons.account_circle_rounded),
               label: '마이페이지',
             ),
           ],
