@@ -52,7 +52,7 @@ class _LocationPageState extends State<LocationPage> {
           icon: markerbitmap,
           onTap: ()async{
             await _widgetBox.showBottomInfo(context: context,name: office.campName1.toString(),url: office.firstImageUrl1.toString(),address: office.address1.toString(),num: office.tel1.toString());
-          },
+            },
           markerId: MarkerId((_count += 1).toString()),
           position: LatLng(double.parse(office.mapy1.toString()),
               double.parse(office.mapx1.toString())),

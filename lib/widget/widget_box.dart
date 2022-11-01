@@ -1,3 +1,5 @@
+import 'package:camper/data/location_camp_data.dart';
+import 'package:camper/page/detail_page.dart';
 import 'package:flutter/material.dart';
 
 import '../color/color.dart';
@@ -169,64 +171,71 @@ class WidgetBox {
         ),
         clipBehavior: Clip.antiAlias,
         builder: (BuildContext context) {
-          return Container(
-            height: 350,
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 15,
-                ),
-                Center(
-                    child: Text(
-                  '캠핑장 안내',
-                  style: TextStyle(fontSize: 18,),
-                )),
-                SizedBox(
-                  height: 15,
-                ),
-                Center(
-                  child: ClipRRect(
+          return GestureDetector(
+            onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(builder:(context)=> DetailPage(markData: LocationCampData(
+              ),)));
+              print("object");
+            },
+            child: Container(
+              height: 350,
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                      child: Text(
+                    '캠핑장 안내',
+                    style: TextStyle(fontSize: 18,),
+                  )),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                    child: ClipRRect(
 
-                    child: url == "" ? Image.network("http://sanpo.pfmall.co.kr/img/no-image.png",width: 200,height: 200,) :
-                    Image.network(
-                      url,
-                      width: 350,
-                      height: 210,
-                      fit: BoxFit.cover,
+                      child: url == "" ? Image.network("http://sanpo.pfmall.co.kr/img/no-image.png",width: 200,height: 200,) :
+                      Image.network(
+                        url,
+                        width: 350,
+                        height: 210,
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    borderRadius: BorderRadius.circular(5),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 27),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: TextStyle(
-                          fontSize: 16,
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 27),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(address),
-                    ],
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(address),
+                      ],
+                    ),
                   ),
-                ),
-                // ElevatedButton(
-                //   child: const Text('Done!'),
-                //   onPressed: () => Navigator.pop(context),
-                // )
-              ],
+                  // ElevatedButton(
+                  //   child: const Text('Done!'),
+                  //   onPressed: () => Navigator.pop(context),
+                  // )
+                ],
+              ),
             ),
           );
         });

@@ -78,7 +78,7 @@ class _CommunityState extends State<Community> {
   }
 
   void createDoc(String name, String description, String content,String imageUrl) async {
-    //final userData =  await FirebaseFirestore.instance.collection(colName).doc(user!.uid).get();
+    //final userData =  await FirebaseFirestore.instance.coxllection(colName).doc(user!.uid).get();
     FirebaseFirestore.instance.collection(colName).add({
       fnName: name,
       fnDescription: description,
@@ -274,25 +274,6 @@ class _CommunityState extends State<Community> {
         );
       },
     );
-  }
-
-  void showReadDocSnackBar(DocumentSnapshot doc) {
-    _scaffoldKey.currentState!
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.deepOrangeAccent,
-          duration: Duration(seconds: 5),
-          content: Text(
-              "$fnName: ${doc[fnName]}\n$fnDescription: ${doc[fnDescription]}"
-                  "\n$fnDatetime: ${timestampToStrDateTime(doc[fnDatetime])}"),
-          action: SnackBarAction(
-            label: "Done",
-            textColor: Colors.white,
-            onPressed: () {},
-          ),
-        ),
-      );
   }
 
   DateTime timestampToStrDateTime(Timestamp ts) {
