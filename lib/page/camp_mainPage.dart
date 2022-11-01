@@ -3,6 +3,7 @@ import 'package:camper/data/search_camp.dart';
 import 'package:camper/page/detail_page.dart';
 import 'package:camper/page/location_page.dart';
 import 'package:camper/page/search_keyword_page.dart';
+import 'package:camper/service/location.dart';
 import 'package:camper/widget/decoration.dart';
 import 'package:camper/widget/widget_box.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class _MainCampState extends State<MainCamp> {
   List <String> camp = ["카라반","글램핑","오토캠핑"];
   List<CampData> campList = [];
   CampApi campApi = CampApi();
-
+  LocationClass _locationClass = LocationClass(); //위치 허용 접근 메서드를 불러오기 위한 인스턴스 생성
   void getCampData()async{
     campList = (await campApi.getCampList(context: context))!;
     setState(() {});
@@ -49,6 +50,7 @@ class _MainCampState extends State<MainCamp> {
     // TODO: implement initState
     super.initState();
     getCampData();
+    _locationClass.getLocation(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class _MainCampState extends State<MainCamp> {
               if(index == 0){
                 return Container(
                   margin: EdgeInsets.only(top: 25,left: 20,bottom: 8),
-                  child: Text("The Camp",style: TextStyle(fontSize: 25,),));
+                  child: Text("더 캠프",style: TextStyle(fontSize: 30,color: Colors.grey[800],fontWeight: FontWeight.bold),));
               }else if(index == 1){
                 return Container(
                   width: 400,

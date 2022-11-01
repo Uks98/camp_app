@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:camper/data/camp_data.dart';
@@ -5,6 +6,7 @@ import 'package:camper/page/review_page.dart';
 import 'package:camper/page/search_keyword_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import '../service/Item.dart';
@@ -25,11 +27,31 @@ class _DetailPageState extends State<DetailPage> {
   }
   List? data = [];
   String? imageUrl;
+  //구글맵에 사용되는 변수
+  Completer<GoogleMapController> _controller = Completer();
+  Map<MarkerId, Marker> markers = {};
+  CameraPosition? _GoogleMapCamera;
+  TextEditingController? _reviewTextController = TextEditingController();
+  Marker? marker;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getImageData(campDataG.campId.toString());
+    _GoogleMapCamera = CameraPosition(
+      target: LatLng(double.parse(campDataG.mapy.toString()),
+          double.parse(campDataG.mapx.toString())),
+      zoom: 16,
+    );
+    MarkerId markerId = MarkerId(campDataG.hashCode.toString());
+    marker = Marker(
+        icon:BitmapDescriptor.defaultMarkerWithHue(10.0),
+        position: LatLng(double.parse(campDataG.mapy.toString()),
+            double.parse(campDataG.mapx.toString())),
+        flat: true,
+        markerId: markerId);
+    markers[markerId] = marker!;
   }
   @override
   Widget build(BuildContext context) {
@@ -87,12 +109,16 @@ class _DetailPageState extends State<DetailPage> {
                       Text("캠핑장 설명",style: TextStyle(fontSize: 18,),),
                       SizedBox(height: 20,),
                       Container(
-                          margin: EdgeInsets.only(left: 5,right: 15),
-                          child: Text(campDataG.mainIntro.toString(),style: TextStyle(fontSize: 14,letterSpacing: 1.0,fontWeight: FontWeight.w200))),
+                          margin: EdgeInsets.only(left: 0,right: 15),
+                          child: Text(campDataG.mainIntro.toString(),style: TextStyle(fontSize: 14,letterSpacing: 1.1,fontWeight: FontWeight.w200,color: Colors.grey[700]))),
                       SizedBox(height: 20,),
                       Divider(thickness: 1,endIndent: 30,indent: 5,),
                       SizedBox(height: 20,),
                       Text("위치",style: TextStyle(fontSize: 18,),),
+                      SizedBox(height: 10,),
+                      Text(campDataG.address.toString(),style: TextStyle(fontSize: 14,),),
+                      SizedBox(height: 10,),
+                      getGoogleMap(),
                       SizedBox(height: 20,),
                       Divider(thickness: 1,endIndent: 30,indent: 5,),
                       SizedBox(height: 10,),
@@ -117,7 +143,6 @@ class _DetailPageState extends State<DetailPage> {
                       Text("프로그램 및 활동",style: TextStyle(fontSize: 18,),),
                       SizedBox(height: 20,),
                       _campItem.kindOfActivity(campDataG.freeCon2.toString(),campDataG.posblFcltyCl.toString())
-
                     ],
                   ),
                 )
@@ -143,6 +168,20 @@ class _DetailPageState extends State<DetailPage> {
     } else {
       return "";
     }
+  }
+  getGoogleMap() {
+    return SizedBox(
+      height: 150,
+      width: MediaQuery.of(context).size.width - 50,
+      child: GoogleMap(
+          scrollGesturesEnabled: true,
+          mapType: MapType.normal,
+          initialCameraPosition: _GoogleMapCamera!,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          markers: Set<Marker>.of(markers.values)),
+    );
   }
 
 }
