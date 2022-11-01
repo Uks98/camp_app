@@ -3,6 +3,7 @@ import 'package:camper/page/detail_page.dart';
 import 'package:flutter/material.dart';
 
 import '../color/color.dart';
+import '../service/Item.dart';
 
 class WidgetBox {
   Widget loginContainer(
@@ -160,6 +161,20 @@ class WidgetBox {
     required String url,
     required String address,
     required String num,
+    required String campId,
+    required String campName,
+    required String address1,
+    required String freeCon,
+    required String mainIntro,
+    required String autoSite,
+    required String glamping,
+    required String caravanSite,
+    required String toilet,
+    required String shower,
+    required String freecon2,
+    required String posblfclty,
+    required String x,
+    required String y,
   }) async {
     return await showModalBottomSheet<void>(
         useRootNavigator: true,
@@ -172,10 +187,26 @@ class WidgetBox {
         clipBehavior: Clip.antiAlias,
         builder: (BuildContext context) {
           return GestureDetector(
-            onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(builder:(context)=> DetailPage(markData: LocationCampData(
-              ),)));
-              print("object");
+            onTap: () {
+              print(x.toString());
+              print(y.toString());
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => DetailPage(
+                    markData: LocationCampData(
+                        campId1: campId.toString(),
+                        campName1: campName.toString(),
+                        address1: address.toString(),
+                        freeCon1: freeCon.toString(),
+                        mainIntro1: mainIntro.toString(),
+                        autoSiteCo1: autoSite.toString(),
+                        glamping1: glamping.toString(),
+                        caravSite1: caravanSite.toString(),
+                        toilet1: toilet.toString(),
+                        shower1: shower.toString(),
+                        mapx1: x,
+                        mapy1: y
+                    )),
+              ));
             },
             child: Container(
               height: 350,
@@ -188,23 +219,30 @@ class WidgetBox {
                     height: 15,
                   ),
                   Center(
-                      child: Text(
-                    '캠핑장 안내',
-                    style: TextStyle(fontSize: 18,),
-                  )),
+                    child: Text(
+                      '캠핑장 안내',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     height: 15,
                   ),
                   Center(
                     child: ClipRRect(
-
-                      child: url == "" ? Image.network("http://sanpo.pfmall.co.kr/img/no-image.png",width: 200,height: 200,) :
-                      Image.network(
-                        url,
-                        width: 350,
-                        height: 210,
-                        fit: BoxFit.cover,
-                      ),
+                      child: url == ""
+                          ? Image.network(
+                              "http://sanpo.pfmall.co.kr/img/no-image.png",
+                              width: 200,
+                              height: 200,
+                            )
+                          : Image.network(
+                              url,
+                              width: 350,
+                              height: 210,
+                              fit: BoxFit.cover,
+                            ),
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
@@ -230,10 +268,6 @@ class WidgetBox {
                       ],
                     ),
                   ),
-                  // ElevatedButton(
-                  //   child: const Text('Done!'),
-                  //   onPressed: () => Navigator.pop(context),
-                  // )
                 ],
               ),
             ),

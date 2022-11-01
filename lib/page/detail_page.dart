@@ -3,10 +3,7 @@ import 'dart:convert';
 
 import 'package:camper/data/camp_data.dart';
 import 'package:camper/data/location_camp_data.dart';
-import 'package:camper/page/review_page.dart';
-import 'package:camper/page/search_keyword_page.dart';
 import 'package:camper/widget/detail_witget.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -28,36 +25,71 @@ class _DetailPageState extends State<DetailPage> {
   DetailWidget get detailWidget{
     return _detailWidget;
   }
-  CampData get campDataG{
-    return widget.campData!;
+  CampData? get campDataG{
+    return widget.campData;
   }
+
+  LocationCampData? get markDataG{
+    return widget.markData;
+  }
+
   List? data = [];
   String? imageUrl;
   //구글맵에 사용되는 변수
   Completer<GoogleMapController> _controller = Completer();
+  Completer<GoogleMapController> _controller2 = Completer();
   Map<MarkerId, Marker> markers = {};
+  Map<MarkerId, Marker> markers2 = {};
   CameraPosition? _GoogleMapCamera;
+  CameraPosition? _GoogleMapCamera2;
   TextEditingController? _reviewTextController = TextEditingController();
   Marker? marker;
-
+  Marker? marker2;
+  void getImage(){
+    if(markDataG == null){
+      getImageData(campDataG!.campId.toString());
+    }else{
+      getImageData(markDataG!.campId1.toString());
+    }
+  }
+  void getGoogle(){
+    if(markDataG == null) {
+      _GoogleMapCamera = CameraPosition(
+        target: LatLng(double.parse(campDataG!.mapy.toString()),
+            double.parse(campDataG!.mapx.toString())),
+        zoom: 16,
+      );
+      MarkerId markerId = MarkerId(campDataG.hashCode.toString());
+      marker = Marker(
+          icon: BitmapDescriptor.defaultMarkerWithHue(10.0),
+          position: LatLng(double.parse(campDataG!.mapy.toString()),
+              double.parse(campDataG!.mapx.toString())),
+          flat: true,
+          markerId: markerId);
+      markers[markerId] = marker!;
+    }
+    else{
+      _GoogleMapCamera2 = CameraPosition(
+        target: LatLng(double.parse(markDataG!.mapy1.toString()),
+            double.parse(markDataG!.mapx1.toString())),
+        zoom: 16,
+      );
+      MarkerId markerId2 = MarkerId(markDataG.hashCode.toString());
+      marker2 = Marker(
+          icon: BitmapDescriptor.defaultMarkerWithHue(10.0),
+          position: LatLng(double.parse(markDataG!.mapy1.toString()),
+              double.parse(markDataG!.mapx1.toString())),
+          flat: true,
+          markerId: markerId2);
+      markers2[markerId2] = marker2!;
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getImageData(campDataG.campId.toString());
-    _GoogleMapCamera = CameraPosition(
-      target: LatLng(double.parse(campDataG.mapy.toString()),
-          double.parse(campDataG.mapx.toString())),
-      zoom: 16,
-    );
-    MarkerId markerId = MarkerId(campDataG.hashCode.toString());
-    marker = Marker(
-        icon:BitmapDescriptor.defaultMarkerWithHue(10.0),
-        position: LatLng(double.parse(campDataG.mapy.toString()),
-            double.parse(campDataG.mapx.toString())),
-        flat: true,
-        markerId: markerId);
-    markers[markerId] = marker!;
+    getImage();
+    getGoogle();
   }
   @override
   Widget build(BuildContext context) {
@@ -65,10 +97,15 @@ class _DetailPageState extends State<DetailPage> {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          child: detailWidget.drawCampDetail(
-              campId: campDataG.campId.toString(), campName: campDataG.campName.toString(), address: campDataG.address.toString(), freeCon: campDataG.freeCon.toString(), mainIntro: campDataG.mainIntro.toString(),
-              autoSite: campDataG.autoSiteCo.toString(), glamping: campDataG.glamping.toString(), caravanSite: campDataG.caravSite.toString(), ids: ids, data: data!,
-              campG: CampItem(), context: context, googleMap: getGoogleMap(),toilet: campDataG.toilet.toString(),shower: campDataG.shower.toString())
+          child: widget.markData != null ? detailWidget.drawCampDetail(
+             campId: markDataG!.campId1.toString(), campName: markDataG!.campName1.toString(), address: markDataG!.address1.toString(), freeCon: markDataG!.freeCon1.toString(), mainIntro: markDataG!.mainIntro1.toString(),
+             autoSite: markDataG!.autoSiteCo1.toString(), glamping: markDataG!.glamping1.toString(), caravanSite: markDataG!.caravSite1.toString(), ids: ids, data: data!,
+             campG: CampItem(), context: context,toilet: markDataG!.toilet1.toString(),shower: markDataG!.shower1.toString(),googleMap: getGoogleMap2()):
+
+              detailWidget.drawCampDetail(
+              campId: campDataG!.campId.toString(), campName: campDataG!.campName.toString(), address: campDataG!.address.toString(), freeCon: campDataG!.freeCon.toString(), mainIntro: campDataG!.mainIntro.toString(),
+              autoSite: campDataG!.autoSiteCo.toString(), glamping: campDataG!.glamping.toString(), caravanSite: campDataG!.caravSite.toString(), ids: ids, data: data!,
+              campG: CampItem(), context: context,toilet: campDataG!.toilet.toString(),shower: campDataG!.shower.toString(),googleMap: getGoogleMap())
         ),
       ),
     );
@@ -103,5 +140,18 @@ class _DetailPageState extends State<DetailPage> {
           markers: Set<Marker>.of(markers.values)),
     );
   }
-
+  Widget getGoogleMap2() {
+    return SizedBox(
+      height: 150,
+      width: MediaQuery.of(context).size.width - 50,
+      child: GoogleMap(
+          scrollGesturesEnabled: true,
+          mapType: MapType.normal,
+          initialCameraPosition: _GoogleMapCamera2!,
+          onMapCreated: (GoogleMapController controller) {
+            _controller2.complete(controller);
+          },
+          markers: Set<Marker>.of(markers2.values)),
+    );
+  }
 }

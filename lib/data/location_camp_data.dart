@@ -78,7 +78,7 @@ class LocationCampData {
         campName1: data["facltNm"].toString().toString(),
         insrncAt1: data["insrncAt"].toString(),
         feather1: data["featureNm"].toString(),
-        address1: data["addr1"].toString().padRight(5),
+        address1: data["addr1"].toString(),
         mapx1: data["mapX"].toString(),
         mapy1: data["mapY"].toString(),
         tel1: data["tel"].toString(),
