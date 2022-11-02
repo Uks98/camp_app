@@ -5,9 +5,6 @@
 //snapshot data의 doc에 길이를 지정한 리스트 뷰를 만들고 각 인덱스 값에 접근해 한 유저가 지정한 이미지가
 //다른 유저의 이미지도 변경시키는 상황을 해결했다.
 
-
-
-
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+
 class Community extends StatefulWidget {
   Community({Key? key}) : super(key: key);
 
@@ -24,11 +22,13 @@ class Community extends StatefulWidget {
 
 class _CommunityState extends State<Community> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   void pickedImageFunc(File image) {
     pickedImage = image;
   }
+
   File? pickedImage;
-  String downloadUrl = "a";
+  String? downloadUrl;
   DocumentSnapshot? documentSnapshot;
   final user = FirebaseAuth.instance.currentUser;
   final picker = ImagePicker();
@@ -41,7 +41,13 @@ class _CommunityState extends State<Community> {
     });
   }
 
-  Future _uploadFile(BuildContext context,String url) async {
+  Future _uploadFile(
+    BuildContext context,
+    String url,
+    String name,
+    String content,
+      String time,
+  ) async {
     try {
       final firebaseStorageRef = FirebaseStorage.instance
           .ref()
@@ -56,18 +62,17 @@ class _CommunityState extends State<Community> {
       await uploadTask.whenComplete(() => null);
 
       // 업로드 완료 후 url
-      if(firebaseStorageRef.getDownloadURL() == false){
+      if (firebaseStorageRef.getDownloadURL() == false) {
         downloadUrl = "";
-      }else{
+      } else {
         downloadUrl = await firebaseStorageRef.getDownloadURL();
-
       }
       // 문서 작성
-      createDoc(fnName, fnDescription, content,downloadUrl);
-     // await FirebaseFirestore.instance.collection(colName).doc(user!.uid).set({
-     //   'imageUrl': downloadUrl,
-     //   'userPhotoUrl': pickedImage!.path
-     // });
+      createDoc(name, content, url,time);
+      // await FirebaseFirestore.instance.collection(colName).doc(user!.uid).set({
+      //   'imageUrl': downloadUrl,
+      //   'userPhotoUrl': pickedImage!.path
+      // });
     } catch (e) {
       print(e);
     }
@@ -77,37 +82,33 @@ class _CommunityState extends State<Community> {
     print("down load ${downloadUrl}");
   }
 
-  void createDoc(String name, String description, String content,String imageUrl) async {
+  void createDoc(String name, String content, String imageUrl,time) async {
     //final userData =  await FirebaseFirestore.instance.collection(colName).doc(user!.uid).get();
     FirebaseFirestore.instance.collection(colName).add({
-      fnName: name,
-      fnDescription: description,
+      title: name,
+      contents: content,
       fnDatetime: Timestamp.now(),
+      "time" : time,
       userId: user!.uid,
-      content : content,
-      'image_urls' : imageUrl,
+      'image_urls': imageUrl,
       //userImage: userData['picked_image']
     });
-   // print(userData["imageUrl"]);
+    // print(userData["imageUrl"]);
   }
 
   // 컬렉션명
   String colName = "post";
 
   // 필드명
-  final String fnName = "name";
-  final String fnDescription = "location";
+  final String title = "name";
   final String fnDatetime = "datetime";
   final String imageUrl = "imageUrl";
   final String userId = "userId";
-  final String content = "content";
+  final String contents = "content";
   final String userImage = 'userImage';
   int _likeIndex = 0;
   String? url;
-  TextEditingController _newNameCon = TextEditingController();
-  TextEditingController _locationController = TextEditingController();
-  TextEditingController _undNameCon = TextEditingController();
-  TextEditingController _undDescCon = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
   TextEditingController _contentController = TextEditingController();
   DocumentSnapshot? document;
 
@@ -140,45 +141,76 @@ class _CommunityState extends State<Community> {
                     final docsList = snapshot.data!.docs;
                     if (snapshot.hasError)
                       return Text("Error: ${snapshot.error}");
-                    else if (snapshot.connectionState == ConnectionState.waiting) {
+                    else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
                       return Center(
                         child: CircularProgressIndicator(),
-                      );}else {
+                      );
+                    } else {
                       return snapshot.data != null
-                          ? ListView.builder(
-                          itemCount: docsList.length,
-                          itemBuilder: (context,index){
-                            return Stack(
-                              children: [
-                                Container(color: Colors.grey[900],),
-                                Column(
+                          ? ListView.separated(
+                              itemCount: docsList.length,
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(docsList[index]["name"]),
-                                    Text(docsList[index]["location"]),
-                                    SizedBox(height: 20,),
-                                    Text(docsList[index]["userId"]),
-                                  ],
-                                ),
-                                downloadUrl !=null
-                                    ? Padding(
-                                  padding: const EdgeInsets.only(top: 15.0),
-                                  child: ClipRRect(
-                                    child: Container(
-                                      child:  downloadUrl == null ? Container() : Image.network( docsList[index]["image_urls"]),
-                                      width: 150,
-                                      height: 150,
+                                    Column(
+                                      children: [
+                                        Text(
+                                          docsList[index]["name"],
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        Text(
+                                          docsList[index]["content"],
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[700]),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              docsList[index]["time"],
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey[700]),
+                                            ),
+                                          ],
+                                        )
+                                      ],
                                     ),
-                                    borderRadius:
-                                    BorderRadius.circular(
-                                        30),
-                                  ),
-                                )
-                                    : Container(
-                                  color: Colors.redAccent,
-                                ),
-                              ],
-                            );
-                          }) : const LinearProgressIndicator();
+                                    //Text(docsList[index]["userId"]),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 15.0),
+                                      child: ClipRRect(
+                                        child: Container(
+                                          child: Image.network(
+                                                  docsList[index]["image_urls"],
+                                                  fit: BoxFit.cover,
+                                                ),
+                                          width: 100,
+                                          height: 100,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return Column(
+                                  children: [
+                                    Divider(
+                                      thickness: 2,
+                                      endIndent: 10,
+                                      indent: 10,
+                                    ),
+                                  ],
+                                );
+                              },
+                            )
+                          : CircularProgressIndicator();
                     }
                   }),
             ),
@@ -188,14 +220,10 @@ class _CommunityState extends State<Community> {
     );
   }
 
-
-
-
   // 문서 갱신 (Update)
-  void updateDoc(
-      {required DocumentSnapshot doc, required int count}) {
+  void updateDoc({required DocumentSnapshot doc, required int count}) {
     FirebaseFirestore.instance.collection(colName).doc(doc.id).update({
-      'like' : count,
+      'like': count,
     });
   }
 
@@ -222,11 +250,7 @@ class _CommunityState extends State<Community> {
                   TextField(
                     autofocus: true,
                     decoration: InputDecoration(labelText: "제목"),
-                    controller: _newNameCon,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(labelText: "위치"),
-                    controller: _locationController,
+                    controller: _titleController,
                   ),
                   TextField(
                     controller: _contentController,
@@ -241,8 +265,7 @@ class _CommunityState extends State<Community> {
               ElevatedButton(
                 child: Text("취소"),
                 onPressed: () {
-                  _newNameCon.clear();
-                  _locationController.clear();
+                  _titleController.clear();
                   _contentController.clear();
                   Navigator.pop(context);
                 },
@@ -251,21 +274,21 @@ class _CommunityState extends State<Community> {
               ElevatedButton(
                 child: Text("작성하기"),
                 onPressed: () {
-                  if (_locationController.text.isNotEmpty &&
-                      _newNameCon.text.isNotEmpty) {
-                    _uploadFile(context,downloadUrl);
+                  if (_titleController.text.isNotEmpty && downloadUrl != null) {
+                    DateTime date = DateTime.now();
+                    String time = DateFormat("yyyy/MM/dd일 HH시 mm분").format(date);
+                    _uploadFile(context, downloadUrl!, _titleController.text,
+                        _contentController.text,time);
                   }
-                  _newNameCon.clear();
-                  _locationController.clear();
+                  _titleController.clear();
                   _contentController.clear();
-
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(primary: Color(0xff6A67CE)),
               ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Color(0xffB689C0)),
-                  onPressed: ()async{
+                  onPressed: () async {
                     _getImage();
                   },
                   child: Text("이미지 추가"))
@@ -276,24 +299,26 @@ class _CommunityState extends State<Community> {
     );
   }
 
-  void showReadDocSnackBar(DocumentSnapshot doc) {
-    _scaffoldKey.currentState!
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.deepOrangeAccent,
-          duration: Duration(seconds: 5),
-          content: Text(
-              "$fnName: ${doc[fnName]}\n$fnDescription: ${doc[fnDescription]}"
-                  "\n$fnDatetime: ${timestampToStrDateTime(doc[fnDatetime])}"),
-          action: SnackBarAction(
-            label: "Done",
-            textColor: Colors.white,
-            onPressed: () {},
-          ),
-        ),
-      );
-  }
+  //void showReadDocSnackBar(DocumentSnapshot doc) {
+  //  _scaffoldKey.currentState!
+  //    ..hideCurrentSnackBar()
+  //    ..showSnackBar(
+  //      SnackBar(
+  //        backgroundColor: Colors.deepOrangeAccent,
+  //        duration: Duration(seconds: 5),
+  //        content: Text(
+  //            "$title: ${doc[title]}\n$content: ${doc[content]}"
+  //                "\n$fnDatetime: ${timestampToStrDateTime(doc[fnDatetime])}"),
+  //        action: SnackBarAction(
+  //          label: "Done",
+  //          textColor: Colors.white,
+  //          onPressed: () {},
+  //        ),
+  //      ),
+  //    );
+  //}
 
   DateTime timestampToStrDateTime(Timestamp ts) {
-    return DateTime.fromMicrosecondsSinceEpoch(ts.microsecondsSinceEpoch);}}
+    return DateTime.fromMicrosecondsSinceEpoch(ts.microsecondsSinceEpoch);
+  }
+}
