@@ -18,7 +18,7 @@ class CampItem {
     "lib/asset/fishing.png",
   ];
 
-
+  double _wid = 20.0;
   Widget kindOfCamp(String autoSiteCo, String glamping, String caravSite) {
     //autosite -> 자동차 야영장부지
     //glam -> 글램핑부지
@@ -46,7 +46,7 @@ class CampItem {
             ],
           ): Container(),
           auto != 0 ?SizedBox(
-            width: 20,
+            width: _wid,
           ) : Container(),
           glam > 0 ? Column(
             children: [
@@ -106,7 +106,7 @@ class CampItem {
                 style: TextStyle(fontSize: 12),
               ),
               SizedBox(
-                width: 20,
+                width: _wid,
               ),
             ],
           ): Container(),
@@ -125,12 +125,12 @@ class CampItem {
                 style: TextStyle(fontSize: 12),
               ),
               SizedBox(
-                width: 30,
+                width: _wid,
               ),
             ],
           ) : Container(),
           SizedBox(
-            width: 20,
+            width: _wid,
           ),
           freecon.contains("온수") ? Column(
             children: [
@@ -146,12 +146,12 @@ class CampItem {
                 style: TextStyle(fontSize: 12),
               ),
               SizedBox(
-                width: 20,
+                width: _wid,
               ),
             ],
           ) : Container(),
           SizedBox(
-            width: 20,
+            width: _wid,
           ),
           shower > 0 ? Column(
             children: [
@@ -167,7 +167,7 @@ class CampItem {
                 style: TextStyle(fontSize: 12),
               ),
               SizedBox(
-                width: 30,
+                width: _wid,
               ),
             ],
           ) : Container(),
@@ -185,7 +185,7 @@ class CampItem {
                 style: TextStyle(fontSize: 12),
               ),
               SizedBox(
-                width: 30,
+                width: _wid,
               ),
             ],
           ) : Container(),
@@ -215,7 +215,7 @@ class CampItem {
                 style: TextStyle(fontSize: 12),
               ),
               SizedBox(
-                width: 50,
+                width: _wid,
               ),
             ],
           ): Container(),
@@ -234,12 +234,12 @@ class CampItem {
                 style: TextStyle(fontSize: 12),
               ),
               SizedBox(
-                width: 30,
+                width: _wid,
               ),
             ],
           ) : Container(),
           SizedBox(
-            width: 20,
+            width: _wid,
           ),
         ],
       ),

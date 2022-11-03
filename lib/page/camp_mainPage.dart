@@ -61,7 +61,7 @@ class _MainCampState extends State<MainCamp> {
               if(index == 0){
                 return Container(
                   margin: EdgeInsets.only(top: 25,left: 20,bottom: 8),
-                  child: Text("더 캠프",style: TextStyle(fontSize: 30,color: Colors.grey[800],fontWeight: FontWeight.bold),));
+                  child: Text("더 캠프🌿",style: TextStyle(fontSize: 30,color: Colors.grey[800],fontWeight: FontWeight.bold),));
               }else if(index == 1){
                 return Container(
                   width: 400,
