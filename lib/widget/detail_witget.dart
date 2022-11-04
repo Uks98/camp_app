@@ -38,8 +38,9 @@ class DetailWidget {
                   Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
+                     // bottomLeft: Radius.circular(5),
+                     // bottomRight: Radius.circular(5)
+                  ),
                   image: DecorationImage(
                       image: data.length <= 0
                           ? NetworkImage(_noImage)
