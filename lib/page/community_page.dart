@@ -6,6 +6,7 @@
 //다른 유저의 이미지도 변경시키는 상황을 해결했다.
 import 'dart:io';
 import 'package:camper/color/color.dart';
+import 'package:camper/widget/text_field_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -33,6 +34,7 @@ class _CommunityState extends State<Community> {
   final user = FirebaseAuth.instance.currentUser;
   final picker = ImagePicker();
   String time = ""; //firebase에 저장되는 시간
+  TextFieldBox _textFieldBox = TextFieldBox();
   Future _getImage() async {
     if (pickedImage == null) {
       setState(() {
@@ -176,33 +178,7 @@ class _CommunityState extends State<Community> {
           Container(
             height: 230,
             width: 300,
-            child: TextField(
-              style: TextStyle(color: Colors.black),
-              cursorColor: Colors.white,
-              controller: _titleController,
-              maxLines: 10,
-              minLines: 10,
-              keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  fillColor: Colors.black,
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  focusColor: Colors.grey,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                      width: 2,
-                    ),
-                  ),
-                  hintText: "게시글을 입력해주세요."),
-            ),
+            child: _textFieldBox.contentField(_contentController,10,10)
           ),
           SizedBox(
             height: 5,

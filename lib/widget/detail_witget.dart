@@ -80,13 +80,13 @@ class DetailWidget {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ReviewPage(
-                              campData: CampData(campId: campId),
+                              campData: CampData(campId: campId,campName: campName,address: address),
                               id: ids!,
                             )));
                   },
                   child: Text(
-                    "리뷰 수 ",
-                    style: TextStyle(fontSize: 18),
+                    "리뷰 작성하기",
+                    style: TextStyle(fontSize: 18,color: Colors.grey[800]),
                   ),
                 ),
                 SizedBox(

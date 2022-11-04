@@ -132,7 +132,7 @@ class _LocationPageState extends State<LocationPage> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height - 100,
-              child: GoogleMap(
+              child: latitude != null ?GoogleMap(
                 // onCameraMove: ,
                 circles: circles,
                 //내 위치 주변으로 원 둘레 생성
@@ -145,7 +145,7 @@ class _LocationPageState extends State<LocationPage> {
                   zoom: 7,
                 ),
                 markers: _markers.values.toSet(),
-              ),
+              ) : Center(child: CircularProgressIndicator(),),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 10),
@@ -157,8 +157,6 @@ class _LocationPageState extends State<LocationPage> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        print(longitude);
-                        print(latitude);
                         setState(() {
                           _locationCount = index;
                           print(index);
