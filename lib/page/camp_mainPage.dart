@@ -3,6 +3,7 @@ import 'package:camper/data/search_camp.dart';
 import 'package:camper/page/detail_page.dart';
 import 'package:camper/page/location_page.dart';
 import 'package:camper/page/search_keyword_page.dart';
+import 'package:camper/service/filter_data.dart';
 import 'package:camper/service/location.dart';
 import 'package:camper/widget/decoration.dart';
 import 'package:camper/widget/widget_box.dart';
@@ -28,8 +29,10 @@ class _MainCampState extends State<MainCamp> {
     "lib/asset/bonfire.png",
   ];
   List <String> camp = ["카라반","글램핑","오토캠핑"];
+  List <String> recommendLocation = ["#반려견과 함께🐕", "#바다와 함께🌊", "#숲속을 걷자🌳" ];
   List<CampData> campList = [];
   CampApi campApi = CampApi();
+  RecommendFilter recommendFilter = RecommendFilter();
   LocationClass _locationClass = LocationClass(); //위치 허용 접근 메서드를 불러오기 위한 인스턴스 생성
   void getCampData()async{
     campList = (await campApi.getCampList(context: context))!;
@@ -51,6 +54,7 @@ class _MainCampState extends State<MainCamp> {
     super.initState();
     getCampData();
     _locationClass.getLocation(context);
+    recommendFilter.getPet();
   }
   @override
   Widget build(BuildContext context) {
@@ -94,7 +98,39 @@ class _MainCampState extends State<MainCamp> {
                     },
                   ),
                 );
-              }return GestureDetector(
+              }else if (index == 2){
+                return Container(
+                  width: 50,
+                  height: 90,
+                child: GridView.builder(
+                  itemCount: recommendLocation.length, //item 개수
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, //1 개의 행에 보여줄 item 개수
+                    childAspectRatio: 5/1, //item 의 가로 1, 세로 2 의 비율
+                    mainAxisSpacing: 10, //수평 Padding
+                    crossAxisSpacing: 10, //수직 Padding
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    //item 의 반목문 항목 형성
+                    return Card(
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                          child: Center(
+                            child: Text(
+                              recommendLocation[index],
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                      ),
+                    );
+                  },
+              ),
+                );
+              }
+              return GestureDetector(
                 onTap: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
                       DetailPage(

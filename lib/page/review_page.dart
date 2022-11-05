@@ -31,6 +31,7 @@ class _ReviewPageState extends State<ReviewPage> {
   double check = 1;
   double serviceCheck = 1;
 
+
   CampData get campData {
     return widget.campData;
   }
@@ -40,8 +41,8 @@ class _ReviewPageState extends State<ReviewPage> {
       _realTimeBase.reference!
           .child('camp')
           .child(
-        campData.campId.toString(),
-      )
+            campData.campId.toString(),
+          )
           .child('review')
           .child(user!.uid)
           .remove();
@@ -50,6 +51,7 @@ class _ReviewPageState extends State<ReviewPage> {
       });
     }
   }
+
   Widget returnStar(int star) {
     double iconSize = 16.0;
     Color color = Colors.amber;
@@ -191,176 +193,212 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.white,
-          onPressed: () {
-            print('아이디 : ${widget.id}');
-            //리펙
-            showModalBottomSheet<void>(
-              isScrollControlled: true,
-              context: context,
-              builder: (BuildContext context) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    //키보드 창 위에 표시
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                        )),
-                    height: 350,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 43.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                campData.campName.toString(),
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(campData.address.toString(),
-                                  style: TextStyle(fontSize: 16)),
-                              SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text("친절도"),
-                            RatingBar.builder(
-                              itemSize: 30,
-                              initialRating: 0,
-                              minRating: check,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemCount: 5,
-                              itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 4.0),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              onRatingUpdate: (rating) {
-                                setState(() {
-                                  check = rating;
-                                });
-                                print("체크${check}");
-                              },
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text("서비스"),
-                            RatingBar.builder(
-                              itemSize: 30,
-                              initialRating: 0,
-                              minRating: serviceCheck,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemCount: 5,
-                              itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 4.0),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              onRatingUpdate: (rating) {
-                                setState(() {
-                                  serviceCheck = rating;
-                                });
-                                print("serviceCheck ${serviceCheck}");
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Center(
-                          child: Container(
-                              width: 350,
-                              child: _textFieldBox.contentField(
-                                  reviewController, 3, 3)),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: Container(
-                            width: 350,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.black),
-                              onPressed: () {
-                                if (_realTimeBase.reference != null &&
-                                    reviewController.text.isNotEmpty) {
-                                  String formatDate =
-                                      DateFormat('MM월 dd일 HH시 mm분')
-                                          .format(DateTime.now()); //format변경
-                                  setState(() {
-                                    Review review = Review(
-                                        user!.uid,
-                                        reviewController.text,
-                                        formatDate,
-                                        check.floor(),
-                                        serviceCheck.floor());
-                                    _realTimeBase.reference!
-                                        .child("camp")
-                                        .child(widget.campData.campId!)
-                                        .child('review')
-                                        .child(user!.uid)
-                                        .set(review.toJson());
-                                  });
-                                }
-                                //getCheckInfo();
-                                Navigator.of(context).maybePop();
-                              },
-                              child: Text("입력"),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
+      floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          centerTitle: true,
-          elevation: 0.0,
-          title: Text(
-            "리뷰",
-            style: TextStyle(color: Colors.grey[800]),
-          ),
+        child: Icon(
+          Icons.add,
+          color: Colors.grey[800],
         ),
-        body: review.isNotEmpty
-            ? ListView.separated(
-                itemBuilder: (context, index1) {
-                  print('리뷰 : ${review[index1].review}');
-                  //int i = index1 =0;
+        onPressed: () {
+          showModalBottomSheet<void>(
+            isScrollControlled: true,
+            context: context,
+            builder: (BuildContext context) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  //키보드 창 위에 표시
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      )),
+                  height: 350,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 43.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              campData.campName.toString(),
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(campData.address.toString(),
+                                style: TextStyle(fontSize: 14)),
+                            SizedBox(
+                              height: 15,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text("친절도"),
+                          RatingBar.builder(
+                            itemSize: 30,
+                            initialRating: 0,
+                            minRating: check,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (rating) {
+                              setState(() {
+                                check = rating;
+                              });
+                              print("체크${check}");
+                            },
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text("청결도"),
+                          RatingBar.builder(
+                            itemSize: 30,
+                            initialRating: 0,
+                            minRating: serviceCheck,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (rating) {
+                              setState(() {
+                                serviceCheck = rating;
+                              });
+                              print("serviceCheck ${serviceCheck}");
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Container(
+                            width: 350,
+                            child: _textFieldBox.contentField(
+                                reviewController, 3, 3)),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Center(
+                        child: Container(
+                          width: 350,
+                          child: ElevatedButton(
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.black),
+                            onPressed: () {
+                              if (_realTimeBase.reference != null &&
+                                  reviewController.text.isNotEmpty) {
+                                String formatDate = DateFormat('MM월/dd일')
+                                    .format(DateTime.now()); //format변경
+                                setState(() {
+                                  Review review = Review(
+                                      user!.uid,
+                                      reviewController.text,
+                                      formatDate,
+                                      check.floor(),
+                                      serviceCheck.floor());
+                                  _realTimeBase.reference!
+                                      .child("camp")
+                                      .child(widget.campData.campId!)
+                                      .child('review')
+                                      .child(user!.uid)
+                                      .set(review.toJson());
+                                });
+                              }
+                              //getCheckInfo();
+                              Navigator.of(context).maybePop();
+                            },
+                            child: Text("입력"),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.of(context).pop();
+          }, icon: Icon(Icons.close,color: Colors.grey[800],))
+        ],
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        elevation: 1.0,
+        title: Text(
+          "${campData.campName}",
+          style: TextStyle(color: Colors.grey[800]),
+        ),
+      ),
+      body: review.isNotEmpty
+          ? ListView.separated(
+              shrinkWrap: false,
+              itemBuilder: (context, index1){
+              //  int i = 0;
+              //  double b = 0;
+              //  if(b > 5){
+              //    b = 5;
+              //  }else{
+              //    for(final x in review){
+              //      i += index1 + 2;
+              //      b = x.disable1!.floor() + x.disable2!.floor() / i;
+              //    }
+              //  }
+              //  if(index1 == 0){
+              //    double average = returnAverage(review[index1].disable1!.floor(),review[index1].disable1!.floor());
+              //    return Column(
+              //      children: [
+              //        Stack(
+              //          children: [
+              //            Container(width: MediaQuery.of(context).size.width,height: 300,color: Colors.teal,),
+              //            Column(
+              //              crossAxisAlignment: CrossAxisAlignment.center,
+              //              children: [
+              //                Text(
+              //                  "${campData.campName}",
+              //                  style: TextStyle(fontSize: 18),
+              //                ),
+              //                //Text(b.toString()),
+              //              ],
+              //            ),
+              //          ],
+              //        ),
+              //      ],
+              //    );
+              //  }
                   return GestureDetector(
                     onTap: () {
                       deleteReview(index1);
@@ -368,8 +406,8 @@ class _ReviewPageState extends State<ReviewPage> {
                     child: Card(
                       child: InkWell(
                         child: Padding(
-                          padding:
-                              EdgeInsets.only(top: 10, bottom: 10, left: 10),
+                          padding: EdgeInsets.only(
+                              top: 10, bottom: 10, left: 10),
                           child: Column(
                             children: [
                               Container(
@@ -377,28 +415,31 @@ class _ReviewPageState extends State<ReviewPage> {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "캠퍼",
                                           style: TextStyle(fontSize: 15),
                                         ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
                                         Text(
-                                          "${review[index1].createTime.toString()}",
+                                          "${review[index1].createTime
+                                              .toString()}",
                                           style: TextStyle(fontSize: 15),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
                                         ),
                                         Text(
                                           "${review[index1].review.toString()}",
                                           style: TextStyle(fontSize: 18),
                                         ),
-                                        //Text(
-                                        //  "${review[index1].id.toString()}",
-                                        //  style: TextStyle(fontSize: 18),
-                                        //),
                                       ],
                                     ),
                                     returnStar(review[index1].disable1!.floor())
@@ -411,21 +452,23 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                     ),
                   );
-                },
-                separatorBuilder: (ctx, idx) {
-                  return SizedBox(
-                    height: 10,
-                  );
-                },
-                itemCount: review.length)
-            : Center(
-                child: Text(
-                  "아직 리뷰가 없어요! 첫 리뷰를 남겨주세요",
-                  style: TextStyle(fontSize: 18),
-                ),
-              ));
+
+              },
+              separatorBuilder: (ctx, idx) {
+                return SizedBox(
+                  height: 15,
+                );
+              },
+              itemCount: review.length)
+          : Center(
+              child: Text(
+                "아직 리뷰가 없어요! 첫 리뷰를 남겨주세요",
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+    );
   }
-
-
-
+  double returnAverage(int x,int y){
+    return  (x+y) / 2;
+  }
 }

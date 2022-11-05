@@ -194,14 +194,14 @@ class CampItem {
     );
   }
 
-  Widget kindOfActivity(String freecon2,String posblFcltyCl) {
+  Widget kindOfActivity(String freecon2,String posblFcltyCl,String intro) {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          freecon2.contains("반려") ?Column(
+          freecon2.contains("반려") || intro.contains("반려견") ?Column(
             children: [
               Image.asset(
                 _activityList[0],
@@ -220,7 +220,7 @@ class CampItem {
             ],
           ): Container(),
           !freecon2.contains("반려")? Container() : SizedBox(width: 20,),
-          posblFcltyCl.contains("낚시") ? Column(
+          posblFcltyCl.contains("낚시") || intro.contains("낚시") ? Column(
             children: [
               Image.asset(
                 _activityList[1],

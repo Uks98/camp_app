@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import '../page/review_page.dart';
 import '../service/Item.dart';
 
 class DetailWidget {
+  int vaIndex = 0;
   Widget drawCampDetail(
       {required String campId,
       required String campName,
@@ -24,7 +27,8 @@ class DetailWidget {
       required List data,
       required CampItem campG,
       required BuildContext context,
-        Widget? googleMap}) {
+        Widget? googleMap,
+      }) {
     String _noImage = "http://sanpo.pfmall.co.kr/img/no-image.png";
     return Container(
       child: Column(
@@ -63,7 +67,7 @@ class DetailWidget {
             height: 10,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 15.0),
+            padding: EdgeInsets.only(left: 13.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -75,23 +79,24 @@ class DetailWidget {
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 TextButton(
+
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ReviewPage(
+                        builder: (context) =>  ReviewPage(
                               campData: CampData(campId: campId,campName: campName,address: address),
                               id: ids!,
                             )));
                   },
                   child: Text(
-                    "리뷰 작성하기",
-                    style: TextStyle(fontSize: 18,color: Colors.grey[800]),
+                    "전체 리뷰 보기".toString(),
+                    style: TextStyle(fontSize: 16,color: Colors.grey[500]),
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Text(
                   address.toString(),
@@ -234,7 +239,10 @@ class DetailWidget {
                 SizedBox(
                   height: 20,
                 ),
-                campG.kindOfActivity(freecon2.toString(), posblfclty.toString())
+                campG.kindOfActivity(freecon2.toString(), posblfclty.toString(),mainIntro.toString()),
+                SizedBox(
+                  height: 20,
+                ),
               ],
             ),
           )
