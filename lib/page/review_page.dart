@@ -41,8 +41,8 @@ class _ReviewPageState extends State<ReviewPage> {
       _realTimeBase.reference!
           .child('camp')
           .child(
-            campData.campId.toString(),
-          )
+        campData.campId.toString(),
+      )
           .child('review')
           .child(user!.uid)
           .remove();
@@ -207,7 +207,10 @@ class _ReviewPageState extends State<ReviewPage> {
               return Padding(
                 padding: EdgeInsets.only(
                   //키보드 창 위에 표시
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                  bottom: MediaQuery
+                      .of(context)
+                      .viewInsets
+                      .bottom,
                 ),
                 child: Container(
                   decoration: BoxDecoration(
@@ -256,10 +259,11 @@ class _ReviewPageState extends State<ReviewPage> {
                             allowHalfRating: true,
                             itemCount: 5,
                             itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            ),
+                            itemBuilder: (context, _) =>
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
                             onRatingUpdate: (rating) {
                               setState(() {
                                 check = rating;
@@ -281,10 +285,11 @@ class _ReviewPageState extends State<ReviewPage> {
                             allowHalfRating: true,
                             itemCount: 5,
                             itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            ),
+                            itemBuilder: (context, _) =>
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
                             onRatingUpdate: (rating) {
                               setState(() {
                                 serviceCheck = rating;
@@ -311,7 +316,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           width: 350,
                           child: ElevatedButton(
                             style:
-                                ElevatedButton.styleFrom(primary: Colors.black),
+                            ElevatedButton.styleFrom(primary: Colors.black),
                             onPressed: () {
                               if (_realTimeBase.reference != null &&
                                   reviewController.text.isNotEmpty) {
@@ -350,9 +355,9 @@ class _ReviewPageState extends State<ReviewPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: (){
+          IconButton(onPressed: () {
             Navigator.of(context).pop();
-          }, icon: Icon(Icons.close,color: Colors.grey[800],))
+          }, icon: Icon(Icons.close, color: Colors.grey[800],))
         ],
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
@@ -364,41 +369,66 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
       ),
       body: review.isNotEmpty
-          ? ListView.separated(
-              shrinkWrap: false,
-              itemBuilder: (context, index1){
-              //  int i = 0;
-              //  double b = 0;
-              //  if(b > 5){
-              //    b = 5;
-              //  }else{
-              //    for(final x in review){
-              //      i += index1 + 2;
-              //      b = x.disable1!.floor() + x.disable2!.floor() / i;
-              //    }
-              //  }
-              //  if(index1 == 0){
-              //    double average = returnAverage(review[index1].disable1!.floor(),review[index1].disable1!.floor());
-              //    return Column(
-              //      children: [
-              //        Stack(
-              //          children: [
-              //            Container(width: MediaQuery.of(context).size.width,height: 300,color: Colors.teal,),
-              //            Column(
-              //              crossAxisAlignment: CrossAxisAlignment.center,
-              //              children: [
-              //                Text(
-              //                  "${campData.campName}",
-              //                  style: TextStyle(fontSize: 18),
-              //                ),
-              //                //Text(b.toString()),
-              //              ],
-              //            ),
-              //          ],
-              //        ),
-              //      ],
-              //    );
-              //  }
+          ? Column(
+        children: [
+          Column(
+            children: [
+              Stack(
+                children: [
+                  Container(width: MediaQuery
+                      .of(context)
+                      .size
+                      .width, height: 300, color: Colors.teal,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "${campData.campName}",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      //Text(b.toString()),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView.separated(
+                shrinkWrap: false,
+                itemBuilder: (context, index1) {
+                  int i = 0;
+                  double b = 0;
+                  if (b > 5) {
+                    b = 5;
+                  } else {
+                    for (final x in review) {
+                      // i += index1 + 2;
+                      b = x.disable1!.floor() + x.disable2!.floor() / i;
+                    }
+                  }
+                  //if(index1 == 1){
+                  //  double average = returnAverage(review[index1].disable1!.floor(),review[index1].disable1!.floor());
+                  //  return Column(
+                  //    children: [
+                  //      Stack(
+                  //        children: [
+                  //          Container(width: MediaQuery.of(context).size.width,height: 300,color: Colors.teal,),
+                  //          Column(
+                  //            crossAxisAlignment: CrossAxisAlignment.center,
+                  //            children: [
+                  //              Text(
+                  //                "${campData.campName}",
+                  //                style: TextStyle(fontSize: 18),
+                  //              ),
+                  //              //Text(b.toString()),
+                  //            ],
+                  //          ),
+                  //        ],
+                  //      ),
+                  //    ],
+                  //  );
+                  //}
                   return GestureDetector(
                     onTap: () {
                       deleteReview(index1);
@@ -452,23 +482,26 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                     ),
                   );
-
-              },
-              separatorBuilder: (ctx, idx) {
-                return SizedBox(
-                  height: 15,
-                );
-              },
-              itemCount: review.length)
+                },
+                separatorBuilder: (ctx, idx) {
+                  return SizedBox(
+                    height: 15,
+                  );
+                },
+                itemCount: review.length),
+          ),
+        ],
+      )
           : Center(
-              child: Text(
-                "아직 리뷰가 없어요! 첫 리뷰를 남겨주세요",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
+        child: Text(
+          "아직 리뷰가 없어요! 첫 리뷰를 남겨주세요",
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
     );
   }
-  double returnAverage(int x,int y){
-    return  (x+y) / 2;
+
+  double returnAverage(int x, int y) {
+    return (x + y) / 2;
   }
 }

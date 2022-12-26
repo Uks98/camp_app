@@ -94,7 +94,8 @@ class _LocationPageState extends State<LocationPage> {
         );
         _markers[(_count += 1).toString()] = marker;
       }
-    });
+    }
+    );
   }
 
   Set<Circle> circles = Set.from([

@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:camper/login_logic/kakao_login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +10,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../color/color.dart';
 import '../widget/widget_box.dart';
 import 'camp_navigation.dart';
+
 
 class LoginSignupScreen extends StatefulWidget {
   @override
@@ -34,6 +39,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   WidgetBox widgetBox = WidgetBox();
 
   final FirebaseAuth auth = FirebaseAuth.instance;
+  KakaoLogin _kakaoLogin = KakaoLogin();
 
   Future<void> signup(BuildContext context) async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -56,6 +62,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       // for go to the HomePage screen
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +89,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("더 캠퍼",
+                        Text("오늘의 캠핑",
                           style: TextStyle(color: ColorBox.backColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 40),),
+                          fontSize: 35),),
                         const SizedBox(
                           height: 5,
                         ),
@@ -355,7 +362,6 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                   email: userEmail,
                                   password: userPassWord,
                                 );
-
                                 await FirebaseFirestore.instance
                                     .collection("user")
                                     .doc(newUser.user!.uid)
@@ -483,10 +489,11 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(height: 10,),
                     widgetBox.loginContainer(() {
                       signup(context);
-                    }, "구글 로그인", "lib/asset/google_lo.png")
+                    }, "네이버ㅠ 로그인", "lib/asset/google_lo.png"),
+                    ElevatedButton(onPressed: _kakaoLogin.signInWithKakao, child: Text("네이버 로그인 기능 구현"))
                   ],
                 ),
               ),

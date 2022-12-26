@@ -24,9 +24,10 @@ class _MainCampState extends State<MainCamp> {
   WidgetBox _widgetBox = WidgetBox();
   DecorationWidgetBox _decorationWidgetBox = DecorationWidgetBox();
   List<String> categoryIcon = [
-    "lib/asset/caravan.png",
-    "lib/asset/glamping.png",
-    "lib/asset/bonfire.png",
+    "lib/asset/tent.png",
+    "lib/asset/caravan2.png",
+    "lib/asset/bonfire2.png",
+
   ];
   List <String> camp = ["카라반","글램핑","오토캠핑"];
   List <String> recommendLocation = ["#반려견과 함께🐕", "#바다와 함께🌊", "#숲속을 걷자🌳" ];
@@ -65,7 +66,7 @@ class _MainCampState extends State<MainCamp> {
               if(index == 0){
                 return Container(
                   margin: EdgeInsets.only(top: 25,left: 20,bottom: 8),
-                  child: Text("더 캠프🌿",style: TextStyle(fontSize: 30,color: Colors.grey[800],fontWeight: FontWeight.bold),));
+                  child: Text("오늘의 캠핑 🌿",style: TextStyle(fontSize: 30,color: Colors.grey[800],fontWeight: FontWeight.bold),));
               }else if(index == 1){
                 return Container(
                   width: 400,

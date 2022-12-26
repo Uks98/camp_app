@@ -147,7 +147,7 @@ class _CommunityState extends State<Community> {
             child: TextField(
               style: TextStyle(color: Colors.black),
               cursorColor: Colors.white,
-              controller: _contentController,
+              controller: _titleController,
               maxLines: 1,
               minLines: 1,
               keyboardType: TextInputType.multiline,
@@ -249,15 +249,22 @@ class _CommunityState extends State<Community> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: true,
+        elevation: 1.0,
+        backgroundColor: Colors.white,
+        title: Text("캠핑톡 💬",style: TextStyle(color: Colors.grey[800]),),
+      ),
       key: _scaffoldKey,
       body: Stack(
         children: [
           Column(
             children: <Widget>[
+              SizedBox(height: 20,),
               Expanded(
                 child: Container(
                   child: StreamBuilder(
@@ -267,18 +274,18 @@ class _CommunityState extends State<Community> {
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
-                        final docsList = snapshot.data!.docs;
-                        if (snapshot.hasError)
-                          return Text("Error: ${snapshot.error}");
+                        final docsList = snapshot.data?.docs;
+                        if (snapshot.hasError){
+                          return Text("Error: ${snapshot.error}");}
                         else if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
+                            ConnectionState.waiting && snapshot.data == null) {
                           return Center(
                             child: CircularProgressIndicator(),
                           );
                         } else {
                           return snapshot.data != null
                               ? ListView.separated(
-                                  itemCount: docsList.length,
+                                  itemCount: docsList!.length,
                                   itemBuilder: (context, index) {
                                     DateTime date = DateTime.now();
                                     time = DateFormat("MM/dd일 HH시 mm분").format(date);
@@ -299,7 +306,7 @@ class _CommunityState extends State<Community> {
                                               child: Text(
                                                 docsList[index]["title"],
                                                 style: TextStyle(
-                                                    fontSize: 20,
+                                                    fontSize: 16,
                                                     fontWeight: FontWeight.bold,
                                                     overflow:
                                                         TextOverflow.ellipsis),
