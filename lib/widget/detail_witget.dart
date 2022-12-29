@@ -82,7 +82,6 @@ class DetailWidget {
                   height: 5,
                 ),
                 TextButton(
-
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) =>  ReviewPage(

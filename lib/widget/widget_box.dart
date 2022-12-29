@@ -42,8 +42,7 @@ class WidgetBox {
     );
   }
 
-  Widget campingListWidget(
-      String imaUrl, String name, String location, String x) {
+  Widget campingListWidget(String imaUrl, String name, String location, String x,double width,double height) {
     return Stack(
       children: [
         Row(
@@ -52,8 +51,8 @@ class WidgetBox {
               width: 10,
             ),
             Container(
-              width: 130,
-              height: 130,
+              width: width,
+              height: height,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 image: DecorationImage(
@@ -97,7 +96,7 @@ class WidgetBox {
       ],
     );
   }
-
+  //캠프장 검색시 검색되는 캠프장 정보를 반환하는 위젯
   Widget searchCampBox(String image, String name, String location, String intro,
       VoidCallback callback) {
     return GestureDetector(
@@ -154,7 +153,7 @@ class WidgetBox {
       ),
     );
   }
-
+  //맵 정보에서 마커누를 시 발생하는 위젯 커스텀
   Future<void> showBottomInfo({
     required BuildContext context,
     required String name,
@@ -273,5 +272,15 @@ class WidgetBox {
             ),
           );
         });
+  }
+
+  Widget userListTile(String title, String subtitle,VoidCallback callback){
+    return GestureDetector(
+      onTap: callback,
+      child: ListTile(
+        title: Text(title,style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: ColorBox.textColor),),
+        subtitle: Text(subtitle,style: TextStyle(color: Colors.grey[700]),),
+      ),
+    );
   }
 }

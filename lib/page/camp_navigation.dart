@@ -2,6 +2,7 @@ import 'package:camper/color/color.dart';
 import 'package:camper/page/camp_mainPage.dart';
 import 'package:camper/page/community_page.dart';
 import 'package:camper/page/location_page.dart';
+import 'package:camper/page/user_page.dart';
 import 'package:camper/widget/decoration.dart';
 import 'package:camper/widget/widget_box.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,8 @@ class _CampNavigationState extends State<CampNavigation> {
   final List<Widget> _widgetOptions = <Widget>[
     MainCamp(),
     LocationPage(),
-    Community()
+    Community(),
+    UserPage()
   ];
   WidgetBox widgetBox = WidgetBox();
   DecorationWidgetBox decorationWidgetBox = DecorationWidgetBox();

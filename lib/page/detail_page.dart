@@ -40,8 +40,8 @@ class _DetailPageState extends State<DetailPage> {
   Completer<GoogleMapController> _controller2 = Completer();
   Map<MarkerId, Marker> markers = {};
   Map<MarkerId, Marker> markers2 = {};
-  CameraPosition? _GoogleMapCamera;
-  CameraPosition? _GoogleMapCamera2;
+  CameraPosition? _GoogleMapCamera; //전체 지도의 마커
+  CameraPosition? _GoogleMapCamera2; //상세 페이지의 마커
   TextEditingController? _reviewTextController = TextEditingController();
   Marker? marker;
   Marker? marker2;

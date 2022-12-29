@@ -132,7 +132,7 @@ class _LocationPageState extends State<LocationPage> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - 100,
+              height: MediaQuery.of(context).size.height - 60,
               child: latitude != null ?GoogleMap(
                 // onCameraMove: ,
                 circles: circles,

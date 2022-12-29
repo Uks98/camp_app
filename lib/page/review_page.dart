@@ -9,7 +9,6 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../data/review.dart';
-import '../data/riview_count.dart';
 
 class ReviewPage extends StatefulWidget {
   CampData campData;
@@ -182,6 +181,7 @@ class _ReviewPageState extends State<ReviewPage> {
         }
       });
     }
+    print("캠핑 이미지 : ${campData.firstImageUrl}");
   }
 
   @override
@@ -375,10 +375,10 @@ class _ReviewPageState extends State<ReviewPage> {
             children: [
               Stack(
                 children: [
-                  Container(width: MediaQuery
-                      .of(context)
-                      .size
-                      .width, height: 300, color: Colors.teal,),
+                  Container(width: MediaQuery.of(context).size.width,
+                    height: 300, color: Colors.white,child: Image.network(
+                      "${campData.firstImageUrl}"
+                    ),),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -403,32 +403,9 @@ class _ReviewPageState extends State<ReviewPage> {
                     b = 5;
                   } else {
                     for (final x in review) {
-                      // i += index1 + 2;
-                      b = x.disable1!.floor() + x.disable2!.floor() / i;
+                      b = (x.disable1!.floor() + x.disable2!.floor()) / i;
                     }
                   }
-                  //if(index1 == 1){
-                  //  double average = returnAverage(review[index1].disable1!.floor(),review[index1].disable1!.floor());
-                  //  return Column(
-                  //    children: [
-                  //      Stack(
-                  //        children: [
-                  //          Container(width: MediaQuery.of(context).size.width,height: 300,color: Colors.teal,),
-                  //          Column(
-                  //            crossAxisAlignment: CrossAxisAlignment.center,
-                  //            children: [
-                  //              Text(
-                  //                "${campData.campName}",
-                  //                style: TextStyle(fontSize: 18),
-                  //              ),
-                  //              //Text(b.toString()),
-                  //            ],
-                  //          ),
-                  //        ],
-                  //      ),
-                  //    ],
-                  //  );
-                  //}
                   return GestureDetector(
                     onTap: () {
                       deleteReview(index1);

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camper/login_logic/kakao_login.dart';
+import 'package:camper/login_logic/login_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -492,8 +493,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     SizedBox(height: 10,),
                     widgetBox.loginContainer(() {
                       signup(context);
-                    }, "네이버ㅠ 로그인", "lib/asset/google_lo.png"),
-                    ElevatedButton(onPressed: _kakaoLogin.signInWithKakao, child: Text("네이버 로그인 기능 구현"))
+                    }, "카카오 로그인", "lib/asset/google_lo.png"),
+                    ElevatedButton(onPressed: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
+                       }, child: Text("네이버 로그인 기능 구현"))
                   ],
                 ),
               ),

@@ -28,10 +28,12 @@ class _CommunityState extends State<Community> {
   void pickedImageFunc(File image) {
     pickedImage = image;
   }
+
   File? pickedImage;
-  String downloadUrl = "a";
+  String downloadUrl = ""; // 이미지가 없을 경우 기본 값
   DocumentSnapshot? documentSnapshot;
-  final user = FirebaseAuth.instance.currentUser;
+  final user = FirebaseAuth.instance.currentUser; //사용자 토큰 값 가져오는 변수
+
   final picker = ImagePicker();
   String time = ""; //firebase에 저장되는 시간
   TextFieldBox _textFieldBox = TextFieldBox();
@@ -96,19 +98,17 @@ class _CommunityState extends State<Community> {
       contents: content,
       "time": time,
       'image_urls': imageUrls,
-      //userImage: userData['picked_image']
     });
-    // print(userData["imageUrl"]);
   }
   // 컬렉션명
   String colName = "post";
 
   // 필드명
-  final String titles = "title";
-  final String fnDatetime = "datetime";
-  final String imageUrl = "imageUrl";
-  final String userId = "userId";
-  final String contents = "content";
+  final String titles = "title"; //제목
+  final String fnDatetime = "datetime"; //작성시간
+  final String imageUrl = "imageUrl"; //이미지 URL
+  final String userId = "userId"; //기존 유저 식별 토큰
+  final String contents = "content"; //내용
   final String userImage = 'userImage';
   String? url;
   TextEditingController _titleController = TextEditingController();
@@ -189,8 +189,8 @@ class _CommunityState extends State<Community> {
               style: ElevatedButton.styleFrom(
                 primary: ColorBox.backColor,
               ),
-              onPressed: ()async{
-                await _getImage();
+              onPressed: (){
+                 _getImage(); //이미지 추가 함수
               },
               child: Text("사진 추가하기"),
             ),
@@ -210,18 +210,11 @@ class _CommunityState extends State<Community> {
                       time: time,
                       titles: _titleController.text,
                       content: _contentController.text
-                  );
+                  ).then((value) => Navigator.of(context).maybePop());
                 }
                 _titleController.clear();
                 _contentController.clear();
-                // DateTime date = DateTime.now();
-                // time = DateFormat("MM/dd일 HH시 mm분").format(date);
-                // _uploadFile(context,
-                //     url: downloadUrl,
-                //     time: time,
-                //     title: _titleController.text,
-                //     content: _contentController.text);
-                // Navigator.of(context).pop();
+              Navigator.of(context).maybePop();
               },
               child: Text("작성하기"),
             ),
@@ -278,7 +271,7 @@ class _CommunityState extends State<Community> {
                         if (snapshot.hasError){
                           return Text("Error: ${snapshot.error}");}
                         else if (snapshot.connectionState ==
-                            ConnectionState.waiting && snapshot.data == null) {
+                            ConnectionState.waiting || snapshot.data == null) {
                           return Center(
                             child: CircularProgressIndicator(),
                           );
@@ -288,7 +281,7 @@ class _CommunityState extends State<Community> {
                                   itemCount: docsList!.length,
                                   itemBuilder: (context, index) {
                                     DateTime date = DateTime.now();
-                                    time = DateFormat("MM/dd일 HH시 mm분").format(date);
+                                    time = DateFormat("MM/dd일 HH시 mm분").format(date); //작성 시간 초기화
                                     return Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
@@ -339,7 +332,15 @@ class _CommunityState extends State<Community> {
                                                       color: Colors.grey[700]),
                                                 ),
                                               ],
-                                            )
+                                            ),
+                                            SizedBox(height: 10,),
+                                            //uid가 일치해야만 삭제라는 문구 표시
+                                            docsList[index]["userId"]== user!.uid ? GestureDetector(
+                                                onTap:(){
+                                                  deleteDoc(snapshot,index); //게시글 삭제하기
+                                                },
+                                                child: Text("삭제")):
+                                                Container(),
                                           ],
                                         ),
                                         Padding(
@@ -388,8 +389,8 @@ class _CommunityState extends State<Community> {
   }
 
   // 문서 삭제 (Delete)
-  void deleteDoc(User user) {
-    FirebaseFirestore.instance.collection(colName).doc(document!.id).delete();
+  void deleteDoc(AsyncSnapshot snap , int i) {
+    FirebaseFirestore.instance.collection(colName).doc(snap.data!.docs[i].id).delete();
   }
 
   DateTime timestampToStrDateTime(Timestamp ts) {

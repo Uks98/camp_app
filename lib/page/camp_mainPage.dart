@@ -176,7 +176,9 @@ class _MainCampState extends State<MainCamp> {
                     campList[index].firstImageUrl == null ? "asdasda" : campList[index].firstImageUrl.toString(),
                     campList[index].campName.toString(),
                     campList[index].address.toString(),
-                  campList[index].intro.toString(),),
+                  campList[index].intro.toString(),
+                  130,130 //각 각 width,height
+                ),
               );
             },
             separatorBuilder: (ctx, idx) {

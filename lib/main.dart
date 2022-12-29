@@ -14,7 +14,7 @@ class PostHttpOverrides extends HttpOverrides{
   }
 }
 void main() async{
-  KakaoSdk.init(nativeAppKey: "5137cb65f98d3ca0f6d492144b28873c");
+  KakaoSdk.init(nativeAppKey:"5137cb65f98d3ca0f6d492144b28873c");
   WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     HttpOverrides.global = new PostHttpOverrides();
