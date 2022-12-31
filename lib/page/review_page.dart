@@ -1,5 +1,6 @@
 import 'package:camper/data/camp_data.dart';
 import 'package:camper/service/realtimebase.dart';
+import 'package:camper/service/review_service.dart';
 import 'package:camper/widget/text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -24,140 +25,34 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage> {
   RealTimeBase _realTimeBase = RealTimeBase();
   TextFieldBox _textFieldBox = TextFieldBox();
+  ReviewLogic _reviewLogic = ReviewLogic();
   List<Review> review = List.empty(growable: true);
   TextEditingController reviewController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
   double check = 1;
   double serviceCheck = 1;
-
+  String mainRef = "camp";
+  String subRef = "review";
+  var average = 0;
 
   CampData get campData {
     return widget.campData;
   }
-
   void deleteReview(int index) {
     if (review[index].id == user!.uid) {
       _realTimeBase.reference!
-          .child('camp')
+          .child(mainRef)
           .child(
         campData.campId.toString(),
-      )
-          .child('review')
-          .child(user!.uid)
-          .remove();
+      ).child(subRef).child(user!.uid).remove();
       setState(() {
         review.removeAt(index);
       });
     }
   }
 
-  Widget returnStar(int star) {
-    double iconSize = 16.0;
-    Color color = Colors.amber;
-    switch (star) {
-      case 1:
-        return Row(
-          children: [
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            )
-          ],
-        );
-      case 2:
-        return Row(
-          children: [
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            ),
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            )
-          ],
-        );
-      case 3:
-        return Row(
-          children: [
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            ),
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            ),
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            )
-          ],
-        );
-      case 4:
-        return Row(
-          children: [
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            ),
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            ),
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            ),
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            )
-          ],
-        );
-      case 5:
-        return Row(
-          children: [
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            ),
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            ),
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            ),
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            ),
-            Icon(
-              Icons.star,
-              size: iconSize,
-              color: color,
-            )
-          ],
-        );
-    }
-    return CircularProgressIndicator();
-  }
+
+
 
   @override
   void initState() {
@@ -167,9 +62,9 @@ class _ReviewPageState extends State<ReviewPage> {
     _realTimeBase.reference = _realTimeBase.database!.reference().child("camp");
     if (_realTimeBase.database != null) {
       _realTimeBase.reference!
-          .child("camp")
+          .child(mainRef)
           .child(widget.campData.campId!)
-          .child('review')
+          .child(subRef)
           .onChildAdded
           .listen((event) {
         if (event.snapshot.value != null) {
@@ -233,13 +128,13 @@ class _ReviewPageState extends State<ReviewPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              campData.campName.toString(),
+                              campData.campName.toString(), //캠핑장 이름
                               style: TextStyle(fontSize: 18),
                             ),
                             SizedBox(
                               height: 5,
                             ),
-                            Text(campData.address.toString(),
+                            Text(campData.address.toString(), //캠핑주소
                                 style: TextStyle(fontSize: 14)),
                             SizedBox(
                               height: 15,
@@ -330,9 +225,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                       check.floor(),
                                       serviceCheck.floor());
                                   _realTimeBase.reference!
-                                      .child("camp")
+                                      .child(mainRef)
                                       .child(widget.campData.campId!)
-                                      .child('review')
+                                      .child(subRef)
                                       .child(user!.uid)
                                       .set(review.toJson());
                                 });
@@ -368,44 +263,41 @@ class _ReviewPageState extends State<ReviewPage> {
           style: TextStyle(color: Colors.grey[800]),
         ),
       ),
-      body: review.isNotEmpty
-          ? Column(
+      body: Column(
         children: [
           Column(
             children: [
+              SizedBox(height: 20,),
               Stack(
                 children: [
-                  Container(width: MediaQuery.of(context).size.width,
-                    height: 300, color: Colors.white,child: Image.network(
-                      "${campData.firstImageUrl}"
-                    ),),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "${campData.campName}",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      //Text(b.toString()),
-                    ],
+                  Center(
+                    child: Container(width: MediaQuery.of(context).size.width - 50 ,
+                      height: 200, color: Colors.grey[50]),
+                  ),
+                  Center(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 10,),
+                        Text(
+                          "${campData.campName}",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        SizedBox(height: 20,),
+                        Text("별점 평균",style: TextStyle(fontSize: 16),),
+                        SizedBox(height: 20,),
+                        Text("$average/5",style: TextStyle(fontSize: 35),),
+                      ],
+                    ),
                   ),
                 ],
               ),
+              SizedBox(height: 20,)
             ],
           ),
           Expanded(
             child: ListView.separated(
                 shrinkWrap: false,
                 itemBuilder: (context, index1) {
-                  int i = 0;
-                  double b = 0;
-                  if (b > 5) {
-                    b = 5;
-                  } else {
-                    for (final x in review) {
-                      b = (x.disable1!.floor() + x.disable2!.floor()) / i;
-                    }
-                  }
                   return GestureDetector(
                     onTap: () {
                       deleteReview(index1);
@@ -429,7 +321,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                       CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "캠퍼",
+                                          "캠퍼${index1 + 1}",
                                           style: TextStyle(fontSize: 15),
                                         ),
                                         SizedBox(
@@ -449,7 +341,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                         ),
                                       ],
                                     ),
-                                    returnStar(review[index1].disable1!.floor())
+                                    _reviewLogic.returnStar(review[index1].disable1!.floor())
                                   ],
                                 ),
                               ),
@@ -469,16 +361,7 @@ class _ReviewPageState extends State<ReviewPage> {
           ),
         ],
       )
-          : Center(
-        child: Text(
-          "아직 리뷰가 없어요! 첫 리뷰를 남겨주세요",
-          style: TextStyle(fontSize: 18),
-        ),
-      ),
-    );
-  }
 
-  double returnAverage(int x, int y) {
-    return (x + y) / 2;
+    );
   }
 }

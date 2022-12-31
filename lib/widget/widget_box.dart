@@ -279,7 +279,7 @@ class WidgetBox {
       onTap: callback,
       child: ListTile(
         title: Text(title,style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: ColorBox.textColor),),
-        subtitle: Text(subtitle,style: TextStyle(color: Colors.grey[700]),),
+        subtitle: Text(subtitle,style: TextStyle(color: Colors.grey[700],fontSize: 14),),
       ),
     );
   }

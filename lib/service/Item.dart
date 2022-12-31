@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CampItem {
+
+  //카라반,글램핑등에 대한 이미지가 저장된 리스트
   List<String> _campImageList = [
     "lib/asset/touring.png",
     "lib/asset/glamping.png",
     "lib/asset/caravan.png"
   ];
+  //시설에 에 대한 이미지가 저장된 리스트
   List<String> _facilityList = [
     "lib/asset/mart.png",
     "lib/asset/toilet.png",
@@ -13,12 +16,16 @@ class CampItem {
     "lib/asset/shower.png",
     "lib/asset/swimming.png",
   ];
+  //활동에 대한 이미지가 저장된 리스트
   List<String> _activityList = [
     "lib/asset/pets.png",
     "lib/asset/fishing.png",
   ];
 
-  double _wid = 20.0;
+  double _wid = 20.0; //위젯 width 사이즈 조절 변경이 용의하게 끔 변수생성
+
+  // restApi에서 받아오는 데이터가 0일 경우 부지 운영을 따로 안한다는 경우
+  // 0보다 클 경우는 부지 운영을 하는 경우
   Widget kindOfCamp(String autoSiteCo, String glamping, String caravSite) {
     //autosite -> 자동차 야영장부지
     //glam -> 글램핑부지
@@ -47,7 +54,7 @@ class CampItem {
           ): Container(),
           auto != 0 ?SizedBox(
             width: _wid,
-          ) : Container(),
+          ) : SizedBox(width: 20,),
           glam > 0 ? Column(
             children: [
               Image.asset(
@@ -65,6 +72,7 @@ class CampItem {
           ) : Container(),
           caravn > 0 ? Column(
             children: [
+              SizedBox(width: _wid,),
               Image.asset(
                 _campImageList[2],
                 height: 50,
@@ -84,8 +92,8 @@ class CampItem {
   }
 
   Widget kindOfFacility(String freecon,String toilets,String shower1) {
-    int toilet = int.parse(toilets);
-    int shower = int.parse(shower1);
+    int toilet = int.parse(toilets); // int 변환
+    int shower = int.parse(shower1); // int 변환
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Row(
@@ -219,7 +227,7 @@ class CampItem {
               ),
             ],
           ): Container(),
-          !freecon2.contains("반려")? Container() : SizedBox(width: 20,),
+          !freecon2.contains("반려")? SizedBox(width: 0,) : SizedBox(width: 20,),
           posblFcltyCl.contains("낚시") || intro.contains("낚시") ? Column(
             children: [
               Image.asset(
@@ -228,6 +236,9 @@ class CampItem {
               ),
               SizedBox(
                 height: 10,
+              ),
+              SizedBox(
+                width: _wid,
               ),
               Text(
                 "낚시",
@@ -238,9 +249,6 @@ class CampItem {
               ),
             ],
           ) : Container(),
-          SizedBox(
-            width: _wid,
-          ),
         ],
       ),
     );
