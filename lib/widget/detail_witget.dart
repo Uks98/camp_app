@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:camper/service/kakao_navi.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,10 @@ class DetailWidget {
       required CampItem campG,
       required BuildContext context,
         Widget? googleMap,
+        required String x,
+        required String y,
       }) {
+    KaKaoNaviService _kaKaoNaviService = KaKaoNaviService();
     String _noImage = "http://sanpo.pfmall.co.kr/img/no-image.png";
     return Container(
       child: Column(
@@ -64,7 +68,7 @@ class DetailWidget {
             ),
           ),
           SizedBox(
-            height: 10,
+            height: 5,
           ),
           Padding(
             padding: EdgeInsets.only(left: 13.0),
@@ -72,27 +76,42 @@ class DetailWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Text(
                   campName.toString(),
                   style: TextStyle(fontSize: 20),
                 ),
-                SizedBox(
-                  height: 5,
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>  ReviewPage(
+                SizedBox(height: 5,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>  ReviewPage(
                               campData: CampData(campId: campId,campName: campName,address: address),
                               id: ids!,
                             )));
-                  },
-                  child: Text(
-                    "전체 리뷰 보기".toString(),
-                    style: TextStyle(fontSize: 16,color: Colors.grey[500]),
-                  ),
+                      },
+                      child: Text(
+                        "전체 리뷰 보기 🖍️".toString(),
+                        style: TextStyle(fontSize: 16,color: Colors.grey[500]),
+                      ),
+                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                    ),
+                    TextButton(
+                      onPressed: (){
+                        _kaKaoNaviService.isCheckedInstallN(name: campName,x: x,y: y);
+                      },
+                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                      child: Text(
+                        "경로 찾기 🏕️".toString(),
+                        style: TextStyle(fontSize: 16,color: Colors.grey),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                  ],
                 ),
                 SizedBox(
                   height: 5,
