@@ -202,8 +202,8 @@ class WidgetBox {
                         caravSite1: caravanSite.toString(),
                         toilet1: toilet.toString(),
                         shower1: shower.toString(),
-                        mapx1: x,
-                        mapy1: y
+                        mapx1: x.toString(),
+                        mapy1: y.toString()
                     )),
               ));
             },

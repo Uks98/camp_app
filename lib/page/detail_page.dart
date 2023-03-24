@@ -100,7 +100,7 @@ class _DetailPageState extends State<DetailPage> {
           child: widget.markData != null ? detailWidget.drawCampDetail(
              campId: markDataG!.campId1.toString(), campName: markDataG!.campName1.toString(), address: markDataG!.address1.toString(), freeCon: markDataG!.freeCon1.toString(), mainIntro: markDataG!.mainIntro1.toString(),
              autoSite: markDataG!.autoSiteCo1.toString(), glamping: markDataG!.glamping1.toString(), caravanSite: markDataG!.caravSite1.toString(), ids: ids, data: data!,
-             campG: CampItem(), context: context,toilet: markDataG!.toilet1.toString(),shower: markDataG!.shower1.toString(),googleMap: getGoogleMap2(),x: campDataG!.mapx.toString(),y: campDataG!.mapy.toString()):
+             campG: CampItem(), context: context,toilet: markDataG!.toilet1.toString(),shower: markDataG!.shower1.toString(),googleMap: getGoogleMap2(),x: markDataG!.mapx1.toString(),y: markDataG!.mapy1.toString()):
 
               detailWidget.drawCampDetail(
               campId: campDataG!.campId.toString(), campName: campDataG!.campName.toString(), address: campDataG!.address.toString(), freeCon: campDataG!.freeCon.toString(), mainIntro: campDataG!.mainIntro.toString(),
