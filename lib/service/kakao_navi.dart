@@ -9,12 +9,7 @@ class KaKaoNaviService {
       getKaKaoMove(name,x,y);
     } else {
       print('카카오내비 미설치');
-      // 카카오내비 설치 페이지로 이동
-      //launchBrowserTab(Uri.parse(NaviApi.webNaviInstall));
     }
-    print("---------테스트 좌표 -- -- - - ");
-    print(x);
-    print(y);
   }
 
   //카카오 네비가 설치되어 있을 경우 해당 함수에서 카카오 네비를 호출합니다.
@@ -26,8 +21,9 @@ class KaKaoNaviService {
             Location(name: '카카오 판교오피스', x: '127.108640', y: '37.402111'),
         // 경유지 추가
         viaList: [
-          Location(name: '판교역 1번출구', x: '127.111492', y: '37.395225'),
+          //Location(name: name, x: y, y: x),
         ],
+        option: NaviOption(coordType: CoordType.wgs84), //카카오 네비 안뜰 때 추가
       );
     } else {
       // 카카오내비 설치 페이지로 이동

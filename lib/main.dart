@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:camper/page/login_signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,6 +17,8 @@ void main() async{
   KakaoSdk.init(nativeAppKey:"5137cb65f98d3ca0f6d492144b28873c");
   WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    print("fcm token${fcmToken}");
     HttpOverrides.global = new PostHttpOverrides();
     runApp(const MyApp());
 }

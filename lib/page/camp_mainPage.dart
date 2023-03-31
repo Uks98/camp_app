@@ -1,6 +1,7 @@
 import 'package:camper/color/color.dart';
 import 'package:camper/data/search_camp.dart';
 import 'package:camper/page/detail_page.dart';
+import 'package:camper/page/gpt_talk_page.dart';
 import 'package:camper/page/location_page.dart';
 import 'package:camper/page/search_keyword_page.dart';
 import 'package:camper/service/filter_data.dart';
@@ -30,7 +31,7 @@ class _MainCampState extends State<MainCamp> {
 
   ];
   List <String> camp = ["카라반","글램핑","오토캠핑"];
-  List <String> recommendLocation = ["#반려견과 함께🐕", "#바다와 함께🌊", "#숲속을 걷자🌳" ];
+  List <String> recommendLocation = ["#반려견과 함께🐕", "#바다와 함께🌊", "#숲속을 걷자🌳","AI 캠핑 플래너🤖"];
   List<CampData> campList = [];
   CampApi campApi = CampApi();
   RecommendFilter recommendFilter = RecommendFilter();
@@ -113,21 +114,26 @@ class _MainCampState extends State<MainCamp> {
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     //item 의 반목문 항목 형성
-                    return Card(
-                      child: Container(
-                        height: 100,
-                        width: 100,
-                          child: Center(
-                            child: Text(
-                              recommendLocation[index],
-                              style: TextStyle(
-                                fontSize: 16,
+                    return GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ChatPage()));
+                      },
+                      child: Card(
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                            child: Center(
+                              child: Text(
+                                recommendLocation[index],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
-                          ),
+                        ),
                       ),
                     );
-                  },
+                    },
               ),
                 );
               }

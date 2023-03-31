@@ -4,6 +4,7 @@ import 'package:camper/service/review_service.dart';
 import 'package:camper/widget/text_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -34,7 +35,9 @@ class _ReviewPageState extends State<ReviewPage> {
   String mainRef = "camp";
   String subRef = "review";
   var average = 0;
-
+  double? rating; //차트에 사용되는 평점 변수 입니다.
+  var ratingChart; //차트에 사용되는 평점 변수 입니다.
+  List<dynamic> rank = [];
   CampData get campData {
     return widget.campData;
   }
@@ -277,6 +280,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   Center(
                     child: Column(
                       children: [
+
                         SizedBox(height: 10,),
                         Text(
                           "${campData.campName}",
@@ -286,6 +290,14 @@ class _ReviewPageState extends State<ReviewPage> {
                         Text("별점 평균",style: TextStyle(fontSize: 16),),
                         SizedBox(height: 20,),
                         Text("$average/5",style: TextStyle(fontSize: 35),),
+                       // 리뷰 평점 차트
+                        Container(
+                          child: LineChart(
+                            mainData(),
+                          ),
+                          width: 350,
+                          height: 300,
+                        ),
                       ],
                     ),
                   ),
@@ -298,6 +310,9 @@ class _ReviewPageState extends State<ReviewPage> {
             child: ListView.separated(
                 shrinkWrap: false,
                 itemBuilder: (context, index1) {
+                  for(final x in review){
+                    //ratingChart = x.disable1[index1];
+                  }
                   return GestureDetector(
                     onTap: () {
                       deleteReview(index1);
@@ -316,7 +331,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Column(
+                                Column(
                                       crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                       children: [
@@ -341,7 +356,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                         ),
                                       ],
                                     ),
-                                    _reviewLogic.returnStar(review[index1].disable1!.floor())
+                                    _reviewLogic.returnStar(review[index1].disable1!.floor()),
+
                                   ],
                                 ),
                               ),
@@ -351,6 +367,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                     ),
                   );
+
                 },
                 separatorBuilder: (ctx, idx) {
                   return SizedBox(
@@ -362,6 +379,127 @@ class _ReviewPageState extends State<ReviewPage> {
         ],
       )
 
+    );
+  }
+
+  //차트 관련 함수
+  LineChartData mainData() {
+    List<Color> gradientColors = [
+    Colors.grey,
+      Colors.green
+    ];
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: Colors.green,
+            strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color: Colors.green,
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            interval: 1,
+           getTitlesWidget: bottomTitleWidgets,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+           // getTitlesWidget: leftTitleWidgets,
+            reservedSize: 42,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: const Color(0xff37434d)),
+      ),
+      minX: 0,
+      maxX: 11,
+      minY: 40,
+      maxY: 6,
+      lineBarsData: [
+        LineChartBarData(
+
+          spots: [
+            FlSpot(0, ratingChart?.toDouble() ?? 15.0),
+            FlSpot(2, ratingChart?.toDouble() ?? 15.0),
+            FlSpot(4, ratingChart?.toDouble() ?? 15.0),
+           // FlSpot(6, api.chart4 ?? 15.0),
+           // FlSpot(8, api.chart5 ?? 15.0),
+           // FlSpot(10, api.chart6 ?? 15.0),
+           // FlSpot(12, api.chart7 ?? 15.0),
+           // FlSpot(14, api.chart8 ?? 15.0),
+          ],
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: gradientColors,
+          ),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: gradientColors
+                  .map((color) => color.withOpacity(0.3))
+                  .toList(),
+            ),
+          ),
+        ),
+      ],
+
+    );
+  }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 2:
+        text = const Text('MAR', style: style);
+        break;
+      case 5:
+        text = const Text('JUN', style: style);
+        break;
+      case 8:
+        text = const Text('SEP', style: style);
+        break;
+      default:
+        text = const Text('', style: style);
+        break;
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
     );
   }
 }
