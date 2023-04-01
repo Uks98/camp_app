@@ -189,9 +189,8 @@ class _CommunityState extends State<Community> {
               style: ElevatedButton.styleFrom(
                 primary: ColorBox.backColor,
               ),
-              onPressed: (){
-                 _getImage(); //이미지 추가 함수
-              },
+              onPressed: ()=>
+                 _getImage(), //이미지 추가 함수
               child: Text("사진 추가하기"),
             ),
           ),

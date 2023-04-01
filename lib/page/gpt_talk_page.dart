@@ -1,10 +1,14 @@
 import 'dart:convert';
 
+import 'package:camper/color/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_bubble/bubble_type.dart';
+import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_indicator/loading_indicator.dart';
 
 import '../data/chat_gpt_model.dart';
-
 
 const backgroundColor = Color(0xff343541);
 const botBackgroundColor = Color(0xff444654);
@@ -17,7 +21,7 @@ class ChatPage extends StatefulWidget {
 }
 
 Future<String> generateResponse(String prompt) async {
-  const apiKey = "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";
+  const apiKey = "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";
 
   var url = Uri.https("api.openai.com", "/v1/completions");
   final response = await http.post(
@@ -38,7 +42,8 @@ Future<String> generateResponse(String prompt) async {
   );
 
   // Do something with the response
-  Map<String, dynamic> newResponse = jsonDecode(utf8.decode(response.bodyBytes));
+  Map<String, dynamic> newResponse =
+      jsonDecode(utf8.decode(response.bodyBytes));
 
   return newResponse['choices'][0]['text'];
 }
@@ -59,18 +64,25 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 50,
+        leading: IconButton(
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back_outlined,color: Colors.grey[800],),
+        ),
+        centerTitle: true,
         title: const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
             "AI 캠핑플래너",
+            style: TextStyle(color: Colors.black,),
             maxLines: 2,
             textAlign: TextAlign.center,
           ),
         ),
-        backgroundColor: botBackgroundColor,
+        backgroundColor: Colors.white,
       ),
-      backgroundColor: backgroundColor,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -79,11 +91,22 @@ class _ChatPageState extends State<ChatPage> {
             ),
             Visibility(
               visible: isLoading,
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 300),
+                  child: Container(
+                    width: 60,
+                    height: 20,
+                    child: LoadingIndicator(
+                        indicatorType: Indicator.ballPulseSync, // Required, The loading type of the widget
+                        colors: const [Colors.red,Colors.yellow,Colors.blue],       // Optional, The color collections
+                        strokeWidth: 2,                     // Optional, The stroke of the line, only applicable to widget which contains line
+                        backgroundColor: Colors.white,      // Optional, Background of the widget
+                        pathBackgroundColor: Colors.black  // Optional, the stroke backgroundColor
+                    ),
+                  ),
+                )
               ),
             ),
             Padding(
@@ -105,15 +128,16 @@ class _ChatPageState extends State<ChatPage> {
     return Visibility(
       visible: !isLoading,
       child: Container(
-        color: botBackgroundColor,
+        color: Color(0xff62CDFF),
         child: IconButton(
+          color: ColorBox.backColor,
           icon: const Icon(
             Icons.send_rounded,
-            color: Color.fromRGBO(142, 142, 160, 1),
+            color: Color(0xffF6F1F1)
           ),
           onPressed: () async {
             setState(
-                  () {
+              () {
                 _messages.add(
                   ChatMessage(
                     text: _textController.text,
@@ -147,14 +171,15 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Expanded _buildInput() {
+  Widget _buildInput() {
     return Expanded(
       child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.black),
         controller: _textController,
         decoration: const InputDecoration(
-          fillColor: botBackgroundColor,
+          fillColor: Color(0xffF6F1F1),
+          hintText: "메세지를 입력해주세요",
           filled: true,
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
@@ -198,57 +223,91 @@ class ChatMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10.0),
-      padding: const EdgeInsets.all(16),
-      color: chatMessageType == ChatMessageType.bot
-          ? botBackgroundColor
-          : backgroundColor,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          chatMessageType == ChatMessageType.bot
-              ? Container(
-            margin: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Image.asset(
-                'lib/assets/bot.png',
-                //color: Colors.white,
-                scale: 1.5,
-              ),
-            ),
-          )
-              : Container(
-            margin: const EdgeInsets.only(right: 16.0),
-            child: const CircleAvatar(
-              child: Icon(
-                Icons.person,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        chatMessageType == ChatMessageType.bot
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 30,),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(right: 16.0),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: Image.asset(
+                              'lib/asset/bot.png',
+                              //color: Colors.white,
+                              scale: 1.5,
+                            ),
+                          ),
+                        ),
+                        Text("오늘의 캠핑"),
+                      ],
+                    ),
                   ),
-                  child: Text(
-                    text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(color: Colors.white),
+                  //오류발생
+                  //text를 두개쓰고있음
+                  //보내는 메세지 위젯
+                 // Text(text),
+                  getReceiverView(
+                      ChatBubbleClipper5(type: BubbleType.receiverBubble), context, text),
+                ],
+              )
+            : Padding(
+                padding: const EdgeInsets.only(left: 50),
+                child: Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 10,),
+                      getSenderView(
+                          ChatBubbleClipper5(type: BubbleType.sendBubble), context,text),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ],
-      ),
+              ),
+      ],
     );
   }
+
+  getSenderView(CustomClipper clipper, BuildContext context, String? text) =>
+      ChatBubble(
+        clipper: clipper,
+        alignment: Alignment.topRight,
+        margin: EdgeInsets.only(top: 20,right: 10),
+        backGroundColor: Colors.black,
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
+          ),
+          child: Text(
+            text!,
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      );
+
+  getReceiverView(CustomClipper clipper, BuildContext context, String bot)=>
+    Padding(
+      padding: const EdgeInsets.only(left: 50.0),
+      child: ChatBubble(
+        clipper: clipper,
+        backGroundColor: Colors.grey[200],
+        margin: EdgeInsets.only(top: 5),
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
+          ),
+          child: Text(text, style: TextStyle(color: Colors.black),
+          ),
+        ),
+      ),
+    );
+
+
 }

@@ -125,12 +125,12 @@ class LocationMarkerInfo {
   }
 }
 
-Future<LocationMarkerInfo> getGoogleOffices2() async {
+Future<LocationMarkerInfo> getGoogleOffices2(String search) async {
   //String _x = latitude.toString();
   //String _y = longitude.toString();
   String _key = "iwOI%2BU0JCUIMem0fddRQ9Y4Fj2E254wSmoXLGM3hVwqHiS8h12%2FqNozM62Kb5D4ihpeW4KWouAt%2B9djISlDJzw%3D%3D";
   // 위도 경도가 서로 다름..
-  var googleLocationsURL = 'https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=80&pageNo=1&MobileOS=AND&MobileApp=AAA&serviceKey=$_key&_type=json';
+  var googleLocationsURL = 'https://apis.data.go.kr/B551011/GoCamping/searchList?numOfRows=10&pageNo=10&MobileOS=AND&MobileApp=A&serviceKey=iwOI%2BU0JCUIMem0fddRQ9Y4Fj2E254wSmoXLGM3hVwqHiS8h12%2FqNozM62Kb5D4ihpeW4KWouAt%2B9djISlDJzw%3D%3D&_type=json&keyword=$search';
   final response = await http.get(Uri.parse(googleLocationsURL));
   if (response.statusCode == 200) {
     print("body : ${response.body}");

@@ -59,6 +59,8 @@ dependencies:
   kakao_flutter_sdk_navi: ^1.4.2 #카카오 네비 sdk
   firebase_messaging:
   fl_chart: ^0.61.0 #차트 관련
+  flutter_chat_bubble: ^2.0.2 #chat bublle
+  loading_indicator: ^3.1.0 #로딩 인디케이터
 dev_dependencies:
   flutter_test:
     sdk: flutter

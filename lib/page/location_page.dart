@@ -5,6 +5,7 @@ import 'package:camper/data/location_camp_data.dart' as location_Marker;
 import 'package:camper/widget/widget_box.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../data/camp_data.dart';
 import '../data/location_camp_data.dart';
@@ -22,6 +23,8 @@ class _LocationPageState extends State<LocationPage> {
   LocationClass locationClass = LocationClass();
   WidgetBox _widgetBox = WidgetBox();
   final Map<String, Marker> _markers = {};
+
+  String? _locationText;
 
   String get keyword => this.keyword;
   List<CampData> locationData =
@@ -59,7 +62,7 @@ class _LocationPageState extends State<LocationPage> {
       ImageConfiguration(),
       "lib/map_marker/pin.png",
     ); //구글 맵 마커 변경 변수
-    final googleOffices1 = await location_Marker.getGoogleOffices2();
+    final googleOffices1 = await location_Marker.getGoogleOffices2("글램핑");
     setState(() {
       _markers.clear();
       for (final office in googleOffices1.offices1!) {
@@ -128,91 +131,147 @@ class _LocationPageState extends State<LocationPage> {
     return Scaffold(
         body: Column(
       children: [
-        Stack(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - 60,
-              child: latitude != null ?GoogleMap(
-                // onCameraMove: ,
-                circles: circles,
-                //내 위치 주변으로 원 둘레 생성
-                myLocationEnabled: true,
-                // 내 위치 활성화
-                mapType: MapType.normal,
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(latitude, longitude),
-                  zoom: 7,
-                ),
-                markers: _markers.values.toSet(),
-              ) : Center(child: CircularProgressIndicator(),),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0, left: 10),
-              child: Container(
+        Expanded(
+          child: Stack(
+            children: [
+              Container(
                 width: MediaQuery.of(context).size.width,
-                height: 35,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _locationCount = index;
-                          print(index);
-                        });
-                        if (_locationCount == 0) {
-                          //쿼리에 다시 재입력 해야함.
-                          latitude = locations[0]["내위치"]![0];
-                          longitude = locations[0]["내위치"]![1];
-                          animateTo(latitude, longitude);
-                        } else if (_locationCount == 1) {
-                          longitude = locations[1]["가평"]![0];
-                          latitude = locations[1]["가평"]![1];
-                          animateTo(latitude, longitude);
-                        } else if (index == 2) {
-                          longitude = locations[2]["태안"]![0];
-                          latitude = locations[2]["태안"]![1];
-                          animateTo(latitude, longitude);
-                        } else {
-                          longitude = locations[3]["서귀포"]![0];
-                          latitude = locations[3]["서귀포"]![1];
-                          animateTo(latitude, longitude);
-                        }
-                      },
-                      child: Container(
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: index == _locationCount
-                              ? ColorBox.buttonColor
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(10),
+                height: MediaQuery.of(context).size.height - 150,
+                child: latitude != null ?GoogleMap(
+                  // onCameraMove: ,
+                  circles: circles,
+                  //내 위치 주변으로 원 둘레 생성
+                  myLocationEnabled: true,
+                  // 내 위치 활성화
+                  mapType: MapType.normal,
+                  onMapCreated: _onMapCreated,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(latitude, longitude),
+                    zoom: 7,
+                  ),
+                  markers: _markers.values.toSet(),
+                ) : Center(child: CircularProgressIndicator(),),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, left: 10),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 35,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _locationCount = index;
+                            print(index);
+                          });
+                          if (_locationCount == 0) {
+                            //쿼리에 다시 재입력 해야함.
+                            latitude = locations[0]["내위치"]![0];
+                            longitude = locations[0]["내위치"]![1];
+                            animateTo(latitude, longitude);
+                          } else if (_locationCount == 1) {
+                            longitude = locations[1]["가평"]![0];
+                            latitude = locations[1]["가평"]![1];
+                            animateTo(latitude, longitude);
+                          } else if (index == 2) {
+                            longitude = locations[2]["태안"]![0];
+                            latitude = locations[2]["태안"]![1];
+                            animateTo(latitude, longitude);
+                          } else {
+                            longitude = locations[3]["서귀포"]![0];
+                            latitude = locations[3]["서귀포"]![1];
+                            animateTo(latitude, longitude);
+                          }
+                        },
+                        child: Container(
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: index == _locationCount
+                                ? ColorBox.buttonColor
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                              child: Text(
+                            locations[index].keys.join(","),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: index == _locationCount
+                                    ? Colors.white
+                                    : Colors.grey[800]),
+                          )),
                         ),
-                        child: Center(
-                            child: Text(
-                          locations[index].keys.join(","),
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: index == _locationCount
-                                  ? Colors.white
-                                  : Colors.grey[800]),
-                        )),
-                      ),
-                    );
-                  },
-                  itemCount: locations.length,
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                      width: 10,
-                    );
-                  },
+                      );
+                    },
+                    itemCount: locations.length,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(
+                        width: 10,
+                      );
+                    },
+                  ),
                 ),
               ),
-            )
-          ],
+              openPanel(title: "", content: "", dateTime: ""),
+
+            ],
+          ),
         )
       ],
     ));
+  }
+  Widget openPanel({required String title,required String content,required String dateTime}) {
+    return SlidingUpPanel(
+      renderPanelSheet: true,
+      panel: openLocationPanel(),
+      backdropEnabled: true,
+      minHeight: 100,
+      maxHeight: 300,
+      borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+    );
+  }
+  Widget openLocationPanel(){
+    return Row(
+      children: [
+        ElevatedButton(
+            child: Text("aaaaa"),
+            onPressed: (){
+              latitude = 37.514575;
+              longitude = 127.0495556;
+          setState(() {
+            locationMarker("캠핑");
+            animateTo(latitude, longitude);
+          });
+    }),
+        Container(
+          child: Text("aaa"),
+        ),
+      ],
+    );
+  }
+  void locationMarker(String text) async {
+    BitmapDescriptor markerbitmap = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(),
+      "lib/map_marker/pin.png",
+    );
+    _locationText = text;
+    final googleOffices1 =
+    await location_Marker.getGoogleOffices2(_locationText!);
+    setState(() {
+      _markers.clear();
+      for (final office in googleOffices1.offices1!) {
+        final marker = Marker(
+          icon: markerbitmap,
+          onTap: (){},
+          markerId: MarkerId((_count.toString().hashCode).toString()),
+          position: LatLng(double.parse(office.mapy1.toString()),
+              double.parse(office.mapx1.toString())),
+        );
+        _markers[(_count += 1).toString()] = marker;
+      }
+    });
   }
 }
