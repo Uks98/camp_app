@@ -20,6 +20,7 @@ class LocationPage extends StatefulWidget {
 
 class _LocationPageState extends State<LocationPage> {
   int _count = 0;
+  int _bottomCount = 0;
   LocationClass locationClass = LocationClass();
   WidgetBox _widgetBox = WidgetBox();
   final Map<String, Marker> _markers = {};
@@ -43,6 +44,7 @@ class _LocationPageState extends State<LocationPage> {
       "서귀포": [126.260719, 33.221472]
     }
   ]; // 캠핑지로 유명한 지역 리스트 사용자 위치 변경
+  List<String> campKind = ["글램핑", "오토캠핑", "카라반"];
   int _locationCount = 0;
   double latitude = LocationClass.latitude;
   double longitude = LocationClass.longitude;
@@ -70,26 +72,25 @@ class _LocationPageState extends State<LocationPage> {
           icon: markerbitmap,
           onTap: () async {
             await _widgetBox.showBottomInfo(
-              context: context,
-              name: office.campName1.toString(),
-              url: office.firstImageUrl1.toString(),
-              address: office.address1.toString(),
-              num: office.tel1.toString(),
-              freeCon: office.freeCon1.toString(),
-              campName: office.campName1.toString(),
-              glamping: office.glamping1.toString(),
-              address1: office.address1.toString(),
-              caravanSite: office.caravSite1.toString(),
-              mainIntro: office.mainIntro1.toString(),
-              campId: office.campId1.toString(),
-              autoSite: office.autoSiteCo1.toString(),
-              freecon2: office.freeCon21.toString(),
-              posblfclty: office.posblFcltyCl1.toString(),
-              toilet: office.toilet1.toString(),
-              shower: office.shower1.toString(),
-              x : office.mapx1.toString(),
-              y : office.mapy1.toString()
-            );
+                context: context,
+                name: office.campName1.toString(),
+                url: office.firstImageUrl1.toString(),
+                address: office.address1.toString(),
+                num: office.tel1.toString(),
+                freeCon: office.freeCon1.toString(),
+                campName: office.campName1.toString(),
+                glamping: office.glamping1.toString(),
+                address1: office.address1.toString(),
+                caravanSite: office.caravSite1.toString(),
+                mainIntro: office.mainIntro1.toString(),
+                campId: office.campId1.toString(),
+                autoSite: office.autoSiteCo1.toString(),
+                freecon2: office.freeCon21.toString(),
+                posblfclty: office.posblFcltyCl1.toString(),
+                toilet: office.toilet1.toString(),
+                shower: office.shower1.toString(),
+                x: office.mapx1.toString(),
+                y: office.mapy1.toString());
           },
           markerId: MarkerId((_count += 1).toString()),
           position: LatLng(double.parse(office.mapy1.toString()),
@@ -97,8 +98,7 @@ class _LocationPageState extends State<LocationPage> {
         );
         _markers[(_count += 1).toString()] = marker;
       }
-    }
-    );
+    });
   }
 
   Set<Circle> circles = Set.from([
@@ -136,21 +136,25 @@ class _LocationPageState extends State<LocationPage> {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - 150,
-                child: latitude != null ?GoogleMap(
-                  // onCameraMove: ,
-                  circles: circles,
-                  //내 위치 주변으로 원 둘레 생성
-                  myLocationEnabled: true,
-                  // 내 위치 활성화
-                  mapType: MapType.normal,
-                  onMapCreated: _onMapCreated,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(latitude, longitude),
-                    zoom: 7,
-                  ),
-                  markers: _markers.values.toSet(),
-                ) : Center(child: CircularProgressIndicator(),),
+                height: MediaQuery.of(context).size.height - 140,
+                child: latitude != null
+                    ? GoogleMap(
+                        // onCameraMove: ,
+                        circles: circles,
+                        //내 위치 주변으로 원 둘레 생성
+                        myLocationEnabled: true,
+                        // 내 위치 활성화
+                        mapType: MapType.normal,
+                        onMapCreated: _onMapCreated,
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(latitude, longitude),
+                          zoom: 7,
+                        ),
+                        markers: _markers.values.toSet(),
+                      )
+                    : Center(
+                        child: CircularProgressIndicator(),
+                      ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10.0, left: 10),
@@ -215,43 +219,105 @@ class _LocationPageState extends State<LocationPage> {
                 ),
               ),
               openPanel(title: "", content: "", dateTime: ""),
-
             ],
           ),
         )
       ],
     ));
   }
-  Widget openPanel({required String title,required String content,required String dateTime}) {
+
+  Widget openPanel(
+      {required String title,
+      required String content,
+      required String dateTime}) {
     return SlidingUpPanel(
       renderPanelSheet: true,
       panel: openLocationPanel(),
       backdropEnabled: true,
-      minHeight: 100,
-      maxHeight: 300,
+      minHeight: 90,
+      maxHeight: 200,
       borderRadius: BorderRadius.only(
           topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
     );
   }
-  Widget openLocationPanel(){
-    return Row(
+
+  Widget openLocationPanel() {
+    return Column(
       children: [
-        ElevatedButton(
-            child: Text("aaaaa"),
-            onPressed: (){
-              latitude = 37.514575;
-              longitude = 127.0495556;
-          setState(() {
-            locationMarker("캠핑");
-            animateTo(latitude, longitude);
-          });
-    }),
-        Container(
-          child: Text("aaa"),
+        SizedBox(
+          height: 35,
+        ),
+        Text(
+          "어떤 캠핑을 찾고있나요?",
+          style: TextStyle(fontSize: 16),
+        ),
+        SizedBox(
+          height: 35,
+        ),
+        Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 23.0),
+              child: Container(
+                  width: 350,
+                  height: 100,
+                  child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              _bottomCount = index;
+                            });
+                            if(_bottomCount == 0){
+                              latitude = 37.514575;
+                              longitude = 127.0495556;
+                              setState(() {
+                                locationMarker("글램핑");
+                                animateTo(latitude, longitude);
+                              });
+                            }else if(_bottomCount == 1){
+                              latitude = 37.514575;
+                              longitude = 127.0495556;
+                              setState(() {
+                                locationMarker("오토캠핑");
+                                animateTo(latitude, longitude);
+                              });
+                            }else{
+                              latitude = 37.514575;
+                              longitude = 127.0495556;
+                              setState(() {
+                                animateTo(latitude, longitude);
+                                locationMarker("카라반");
+                              });
+                            }
+                          },
+                          child: Container(
+                            child: Text(campKind[index],style: TextStyle(color: Colors.grey[800]),),
+                              padding: EdgeInsets.all(30.0),
+                              margin: EdgeInsets.all(5.0),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 1.0,
+                                  ))),
+                        );
+                      },
+                      separatorBuilder: (ctx, idx) {
+                        return SizedBox(
+                          width: 5,
+                        );
+                      },
+                      itemCount: campKind.length)),
+            ),
+          ],
         ),
       ],
     );
   }
+
   void locationMarker(String text) async {
     BitmapDescriptor markerbitmap = await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(),
@@ -259,13 +325,13 @@ class _LocationPageState extends State<LocationPage> {
     );
     _locationText = text;
     final googleOffices1 =
-    await location_Marker.getGoogleOffices2(_locationText!);
+        await location_Marker.getGoogleOffices2(_locationText!);
     setState(() {
       _markers.clear();
       for (final office in googleOffices1.offices1!) {
         final marker = Marker(
           icon: markerbitmap,
-          onTap: (){},
+          onTap: () {},
           markerId: MarkerId((_count.toString().hashCode).toString()),
           position: LatLng(double.parse(office.mapy1.toString()),
               double.parse(office.mapx1.toString())),

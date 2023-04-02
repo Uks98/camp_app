@@ -39,7 +39,7 @@ class DetailWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 300,
+            height: 280,
             child: CarouselSlider.builder(
               itemCount: data.length,
               itemBuilder: (BuildContext context, int itemIndex, int _) =>
@@ -60,7 +60,7 @@ class DetailWidget {
                 height: 350,
                 viewportFraction: 1,
                 initialPage: 0,
-                autoPlayInterval: Duration(seconds: 5),
+                autoPlayInterval: Duration(seconds: 7),
                 autoPlayCurve: Curves.easeInOut,
                 enlargeCenterPage: true,
                 autoPlay: true, //자동재생 여부
@@ -68,7 +68,7 @@ class DetailWidget {
             ),
           ),
           SizedBox(
-            height: 5,
+            height: 15,
           ),
           Padding(
             padding: EdgeInsets.only(left: 13.0),
