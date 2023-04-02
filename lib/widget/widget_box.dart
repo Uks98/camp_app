@@ -7,14 +7,14 @@ import '../service/Item.dart';
 
 class WidgetBox {
   Widget loginContainer(
-      VoidCallback voidCallback, String title, String imagePath) {
+      VoidCallback voidCallback, String title, String imagePath,Color color) {
     return Container(
       color: Colors.white,
       width: 380,
       height: 50,
       child: ElevatedButton(
         onPressed: voidCallback,
-        style: ElevatedButton.styleFrom(elevation: 5, primary: Colors.white),
+        style: ElevatedButton.styleFrom(elevation: 5, primary: color),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

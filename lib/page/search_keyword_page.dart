@@ -52,7 +52,7 @@ class _KeyWordPageState extends State<KeyWordPage> {
                     decoration: InputDecoration(
                         hintText: "검색어를 입력해주세요",
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
+                            borderRadius: BorderRadius.circular(5.0)),
                         icon: Padding(
                             padding: EdgeInsets.only(left: 13),
                             child: Icon(Icons.search))),

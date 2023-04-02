@@ -97,11 +97,6 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                         const SizedBox(
                           height: 5,
                         ),
-                        Text(
-                         '캠핑하는 사람들',
-                          style: const TextStyle(
-                              letterSpacing: 1.0, color: Colors.black),
-                        )
                       ],
                     ),
                   ),
@@ -418,7 +413,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     if(isSignupScreen)
                     Padding(
@@ -493,10 +488,11 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     SizedBox(height: 10,),
                     widgetBox.loginContainer(() {
                       signup(context);
-                    }, "카카오 로그인", "lib/asset/google_lo.png"),
-                    ElevatedButton(onPressed: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
-                       }, child: Text("네이버 로그인 기능 구현"))
+                    }, "구글 로그인", "lib/asset/google_lo.png",Colors.white,),
+                    SizedBox(height: 10,),
+                    widgetBox.loginContainer(() {
+                      signup(context);
+                    }, "카카오 로그인", "lib/asset/kakao.png",Colors.yellow,),
                   ],
                 ),
               ),

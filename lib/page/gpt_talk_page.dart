@@ -21,7 +21,7 @@ class ChatPage extends StatefulWidget {
 }
 
 Future<String> generateResponse(String prompt) async {
-  const apiKey = "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";
+  const apiKey = "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";
 
   var url = Uri.https("api.openai.com", "/v1/completions");
   final response = await http.post(
@@ -42,9 +42,7 @@ Future<String> generateResponse(String prompt) async {
   );
 
   // Do something with the response
-  Map<String, dynamic> newResponse =
-      jsonDecode(utf8.decode(response.bodyBytes));
-
+  Map<String, dynamic> newResponse = jsonDecode(utf8.decode(response.bodyBytes));
   return newResponse['choices'][0]['text'];
 }
 
@@ -94,7 +92,7 @@ class _ChatPageState extends State<ChatPage> {
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 300),
+                  padding: EdgeInsets.only(bottom: 20),
                   child: Container(
                     width: 60,
                     height: 20,
