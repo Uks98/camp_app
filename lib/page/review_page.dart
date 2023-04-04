@@ -7,6 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -31,16 +32,30 @@ class _ReviewPageState extends State<ReviewPage> {
   List<Review> review = List.empty(growable: true);
   TextEditingController reviewController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
+  SharedPreferences? pref;
+  //차트 카운터 저장
+  void saveChartState(String name,double count)async{
+  pref = await SharedPreferences.getInstance(); //sharedPreference
+  pref?.setDouble(name,count);
+  }
+  // void getData(){
+  //   starPeople5 = 
+  // }
   double check = 1;
-  int testCount = 0; //별점 카운터 변수
-  int tcon = 0;
+
+  List<String> starPeoples5 = [];
+  double? starPeople1 = 0; //1점 준 사람 수
+  double? starPeople2 = 0;
+  double? starPeople3 = 0;
+  double? starPeople4 = 0;
+  double? starPeople5 = 0; //5점 준 사람 수
   double serviceCheck = 1;
   String mainRef = "camp";
   String subRef = "review";
   var average = 0;
   double? rating; //차트에 사용되는 평점 변수 입니다.
   var ratingChart; //차트에 사용되는 평점 변수 입니다.
-  List<dynamic> rank = [];
+  List<double> rank = [];
   CampData get campData {
     return widget.campData;
   }
@@ -82,7 +97,6 @@ class _ReviewPageState extends State<ReviewPage> {
         }
       });
     }
-    print("캠핑 이미지 : ${campData.firstImageUrl}");
   }
 
   @override
@@ -290,14 +304,9 @@ class _ReviewPageState extends State<ReviewPage> {
                         ),
                         SizedBox(height: 20,),
                         Text("별점 평균",style: TextStyle(fontSize: 16),),
+                        Text("리뷰${review.length - 1}개",style: TextStyle(fontSize: 16),),
                         SizedBox(height: 20,),
                         Text("$average/5",style: TextStyle(fontSize: 35),),
-                       // 리뷰 평점 차트
-                       //  Container(
-                       //    child: BarChartSample3(count1: testCount),
-                       //    width: 450,
-                       //    height: 300,
-                       //  ),
                       ],
                     ),
                   ),
@@ -315,17 +324,27 @@ class _ReviewPageState extends State<ReviewPage> {
                     return Container(
                         width: 200,
                         height: 300,
-                        child: BarCharts(s: testCount.toDouble()));
+                        child:BarChart(
+                          BarChartData(
+                            barGroups: barGroups,
+                            gridData: FlGridData(show: false),
+                            alignment: BarChartAlignment.spaceAround,
+                            maxY: 100,
+                          ),
+                        ));
                   }
-                  if(review[index1].disable1! <= 5){
-                    tcon +=1;
-                    testCount = tcon;
+                  for(final x in review){
+                    print("명수 ${x.disable1}");
+                  }
+                  if(review[index1].disable1! >= 5){
+                    double count = 0;
+                    count += 1.0;
+                    saveChartState("5",starPeople5!.toDouble());
+                    starPeople5 = pref?.getDouble("5");
                   }else{
-                    tcon +=1;
-                    testCount = tcon;
+
                   }
                   print("리뷰 몇점?${review[index1].disable2.toString()}");
-                  print("테스트 카운터?${testCount}");
                   return GestureDetector(
                     onTap: () {
                       deleteReview(index1);
@@ -392,4 +411,56 @@ class _ReviewPageState extends State<ReviewPage> {
 
     );
   }
+  List<BarChartGroupData> get barGroups => [
+    BarChartGroupData(
+      x: 0,
+      barRods: [
+        BarChartRodData(
+          toY:starPeople5!.toDouble()
+          //gradient: [Colors.red],
+        )
+      ],
+      showingTooltipIndicators: [0],
+    ),
+    BarChartGroupData(
+      x: 1,
+      barRods: [
+        BarChartRodData(
+          toY:  starPeople5!.toDouble()
+          //gradient: _barsGradient,
+        )
+      ],
+      showingTooltipIndicators: [0],
+    ),
+    // BarChartGroupData(
+    //   x: 2,
+    //   barRods: [
+    //     BarChartRodData(
+    //       toY: 8,
+    //       gradient: _barsGradient,
+    //     )
+    //   ],
+    //   showingTooltipIndicators: [0],
+    // ),
+    // BarChartGroupData(
+    //   x: 3,
+    //   barRods: [
+    //     BarChartRodData(
+    //       toY: 8,
+    //       gradient: _barsGradient,
+    //     )
+    //   ],
+    //   showingTooltipIndicators: [0],
+    // ),
+    // BarChartGroupData(
+    //   x: 4,
+    //   barRods: [
+    //     BarChartRodData(
+    //       toY: 8,
+    //       gradient: _barsGradient,
+    //     )
+    //   ],
+    //   showingTooltipIndicators: [0],
+    // ),
+  ];
 }

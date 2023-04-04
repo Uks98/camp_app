@@ -2,20 +2,17 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class BarCharts extends StatefulWidget {
-  double? s;
-  BarCharts({Key? key,required this.s,}) : super(key: key);
+  BarCharts({Key? key}) : super(key: key);
 
   @override
   State<BarCharts> createState() => BarChartsState();
 }
 
 class BarChartsState extends State<BarCharts> {
-  double get s => s;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-   print("?????ran${s}");
   }
   @override
   Widget build(BuildContext context) {
@@ -127,7 +124,7 @@ class BarChartsState extends State<BarCharts> {
       x: 0,
       barRods: [
         BarChartRodData(
-          toY: s,
+          toY: 8,
           gradient: _barsGradient,
         )
       ],
