@@ -54,7 +54,7 @@ class _LocationPageState extends State<LocationPage> {
   Completer<GoogleMapController> _completer = Completer(); //카메라 위치를 바꾸기 위한 변수
   Future<void> animateTo(double lat, double lng) async {
     final c = await _completer.future;
-    final p = CameraPosition(target: LatLng(lat, lng), zoom: 10.0);
+    final p = CameraPosition(target: LatLng(lat, lng), zoom: 8.0);
     c.animateCamera(CameraUpdate.newCameraPosition(p));
   } //카메라 위치를 바꾸기 위한 함수
 
