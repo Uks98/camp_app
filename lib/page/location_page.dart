@@ -324,8 +324,7 @@ class _LocationPageState extends State<LocationPage> {
       "lib/map_marker/pin.png",
     );
     _locationText = text;
-    final googleOffices1 =
-        await location_Marker.getGoogleOffices2(_locationText!);
+    final googleOffices1 = await location_Marker.getGoogleOffices2(_locationText!);
     setState(() {
       _markers.clear();
       for (final office in googleOffices1.offices1!) {
