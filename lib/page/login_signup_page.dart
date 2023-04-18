@@ -86,11 +86,11 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     //     image: AssetImage('image/fall.jpg'), fit: BoxFit.fill),
                   ),
                   child: Container(
-                    padding: const EdgeInsets.only(top: 90, left: 20),
+                    padding: const EdgeInsets.only(top: 70, left: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("오늘의 캠핑",
+                        Text("오늘의 캠핑⛺",
                           style: TextStyle(color: ColorBox.backColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 35),),
@@ -176,7 +176,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                     validator: (value) {
                                       if (value!.isEmpty ||
                                           value.length < 3) {
-                                        return "Please enter at last 4 characters";
+                                        return "ID는 4자리 이상 입력해주세요.";
                                       }
                                       return null;
                                     },
@@ -212,7 +212,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                     validator: (value) {
                                       if (value!.isEmpty ||
                                           !value.contains("@")) {
-                                        return "Please enter at last 4 characters";
+                                        return "이메일 주소는 반드시 @ 문자를 포함해야합니다.";
                                       }
                                       return null;
                                     },
@@ -284,7 +284,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                   validator: (value) {
                                     if (value!.isEmpty ||
                                         value.length < 6) {
-                                      return "Password must ve at least 8 characters long.";
+                                      return "ID는 최소 4자리 이상 입력해주세요.";
                                     }
                                     return null;
                                   },
@@ -315,7 +315,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                   validator: (value) {
                                     if (value!.isEmpty ||
                                         value.length < 4) {
-                                      return "Please enter at last 4 characters";
+                                      return "비밀번호는 최소 8자리 이상 입력해주세요.";
                                     }
                                     return null;
                                   },
@@ -372,11 +372,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                 }
                               } catch (error) {
                                 print(error);
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("이메일이나 패스워드를 확인해주세요."),
-                                  backgroundColor: Colors.blue,
-                                ));
+                               widgetBox.loginSnackBar(context);
                               }
                             }
                             if (!isSignupScreen) {
@@ -395,16 +391,12 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                 }
                               } catch (error) {
                                 print(error);
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("이메일이나 패스워드를 확인해주세요."),
-                                  backgroundColor: Colors.blue,
-                                ));
+                                widgetBox.loginSnackBar(context);
                               }
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                              elevation: 5,
+                              elevation:2,
                               primary: ColorBox.backColor),
                           child: Center(
                             child: Text("로그인"),
@@ -447,11 +439,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
 
                               } catch (error) {
                                 print(error);
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("이메일이나 패스워드를 확인해주세요."),
-                                  backgroundColor: Colors.blue,
-                                ));
+                                widgetBox.loginSnackBar(context);
                               }
                             }
                             if (!isSignupScreen) {
@@ -468,11 +456,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                 }
                               } catch (error) {
                                 print(error);
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("이메일이나 패스워드를 확인해주세요."),
-                                  backgroundColor: Colors.blue,
-                                ));
+                                widgetBox.loginSnackBar(context);
                               }
                             }
                           },
@@ -491,7 +475,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     }, "구글 로그인", "lib/asset/google_lo.png",Colors.white,),
                     SizedBox(height: 10,),
                     widgetBox.loginContainer(() {
-                      signup(context);
+                      _kakaoLogin.signInWithKakao();
                     }, "카카오 로그인", "lib/asset/kakao.png",Colors.yellow,),
                   ],
                 ),

@@ -31,7 +31,7 @@ class _MainCampState extends State<MainCamp> {
 
   ];
   List <String> camp = ["카라반","글램핑","오토캠핑"];
-  List <String> recommendLocation = ["#반려견과 함께🐕", "#바다와 함께🌊", "#숲속을 걷자🌳","AI 캠핑 플래너🤖"];
+  List <String> recommendLocation = ["애견캠핑 🐕", "체험캠핑 🌊", "키즈캠핑 🐻","AI 캠핑 플래너🤖"];
   List<CampData> campList = [];
   CampApi campApi = CampApi();
   RecommendFilter recommendFilter = RecommendFilter();
