@@ -2,13 +2,12 @@ import 'package:camper/color/color.dart';
 import 'package:camper/data/search_camp.dart';
 import 'package:camper/page/detail_page.dart';
 import 'package:camper/page/gpt_talk_page.dart';
-import 'package:camper/page/location_page.dart';
 import 'package:camper/page/search_keyword_page.dart';
 import 'package:camper/service/filter_data.dart';
-import 'package:camper/service/location.dart';
 import 'package:camper/widget/decoration.dart';
 import 'package:camper/widget/widget_box.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletons/skeletons.dart';
 
 import '../data/camp_data.dart';
 import '../service/http.dart';
@@ -35,6 +34,7 @@ class _MainCampState extends State<MainCamp> {
   List<CampData> campList = [];
   CampApi campApi = CampApi();
   RecommendFilter recommendFilter = RecommendFilter();
+  late bool _isLoading = true; //로딩관련
   void getCampData()async{
     campList = (await campApi.getCampList(context: context))!;
     setState(() {});
@@ -53,13 +53,26 @@ class _MainCampState extends State<MainCamp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getCampData();
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _isLoading = false;
+      });
+    });
     recommendFilter.getPet();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ListView.separated(
+        body: _isLoading ? Skeleton(
+          isLoading: _isLoading,
+          //https://pub.dev/packages/skeletons
+          skeleton: SkeletonListView(
+            padding: EdgeInsets.all(20),
+          ),
+          child: Container(child: Center(child: Text("Content"))),
+        ): ListView.separated(
             shrinkWrap: false,
             itemBuilder: (context, index) {
               if(index == 0){
