@@ -3,12 +3,14 @@ import 'dart:io';
 
 import 'package:camper/login_logic/kakao_login.dart';
 import 'package:camper/login_logic/login_test.dart';
+import 'package:camper/page/location_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../color/color.dart';
+import '../service/location.dart';
 import '../widget/widget_box.dart';
 import 'camp_navigation.dart';
 
@@ -37,7 +39,11 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       _formKey.currentState!.save(); // 폼 전체 state 저장하게 됨
     }
   }
+  //페이지를 구성하는 위젯들을 모아놓은 클래스의 인스턴스
   WidgetBox widgetBox = WidgetBox();
+
+  //위치 허용 접근 메서드를 불러오기 위한 인스턴스 생성
+  LocationClass _locationClass = LocationClass();
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   KakaoLogin _kakaoLogin = KakaoLogin();
@@ -63,7 +69,12 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       // for go to the HomePage screen
     }
   }
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _locationClass.getLocation(context);
+  }
 
   @override
   Widget build(BuildContext context) {

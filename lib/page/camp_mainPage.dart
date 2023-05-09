@@ -35,7 +35,6 @@ class _MainCampState extends State<MainCamp> {
   List<CampData> campList = [];
   CampApi campApi = CampApi();
   RecommendFilter recommendFilter = RecommendFilter();
-  LocationClass _locationClass = LocationClass(); //위치 허용 접근 메서드를 불러오기 위한 인스턴스 생성
   void getCampData()async{
     campList = (await campApi.getCampList(context: context))!;
     setState(() {});
@@ -55,7 +54,6 @@ class _MainCampState extends State<MainCamp> {
     // TODO: implement initState
     super.initState();
     getCampData();
-    _locationClass.getLocation(context);
     recommendFilter.getPet();
   }
   @override
