@@ -327,13 +327,35 @@ class _LocationPageState extends State<LocationPage> {
     final googleOffices1 = await location_Marker.getGoogleOffices2(_locationText!);
     setState(() {
       _markers.clear();
-      for (final office in googleOffices1.offices1!) {
+      for (final office2 in googleOffices1.offices1!) {
+        //재갱신 마커
         final marker = Marker(
           icon: markerbitmap,
-          onTap: () {},
+          onTap: () async {
+            await _widgetBox.showBottomInfo(
+                context: context,
+                name: office2.campName1.toString(),
+                url: office2.firstImageUrl1.toString(),
+                address: office2.address1.toString(),
+                num: office2.tel1.toString(),
+                freeCon: office2.freeCon1.toString(),
+                campName: office2.campName1.toString(),
+                glamping: office2.glamping1.toString(),
+                address1: office2.address1.toString(),
+                caravanSite: office2.caravSite1.toString(),
+                mainIntro: office2.mainIntro1.toString(),
+                campId: office2.campId1.toString(),
+                autoSite: office2.autoSiteCo1.toString(),
+                freecon2: office2.freeCon21.toString(),
+                posblfclty: office2.posblFcltyCl1.toString(),
+                toilet: office2.toilet1.toString(),
+                shower: office2.shower1.toString(),
+                x: office2.mapx1.toString(),
+                y: office2.mapy1.toString());
+          },
           markerId: MarkerId((_count.toString().hashCode).toString()),
-          position: LatLng(double.parse(office.mapy1.toString()),
-              double.parse(office.mapx1.toString())),
+          position: LatLng(double.parse(office2.mapy1.toString()),
+              double.parse(office2.mapx1.toString())),
         );
         _markers[(_count += 1).toString()] = marker;
       }
