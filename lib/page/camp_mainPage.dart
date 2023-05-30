@@ -1,9 +1,9 @@
 import 'package:camper/color/color.dart';
 import 'package:camper/data/search_camp.dart';
 import 'package:camper/page/detail_page.dart';
+import 'package:camper/page/filter_data_page.dart';
 import 'package:camper/page/gpt_talk_page.dart';
 import 'package:camper/page/search_keyword_page.dart';
-import 'package:camper/service/filter_data.dart';
 import 'package:camper/widget/decoration.dart';
 import 'package:camper/widget/widget_box.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +32,11 @@ class _MainCampState extends State<MainCamp> {
   List <String> camp = ["카라반","글램핑","오토캠핑"];
   List <String> recommendLocation = ["애견캠핑 🐕", "체험캠핑 🌊", "키즈캠핑 🐻","AI 캠핑 플래너🤖"];
   List<CampData> campList = [];
+  List<CampData> filterCampList = []; //필터된 캠프리스트
   CampApi campApi = CampApi();
-  RecommendFilter recommendFilter = RecommendFilter();
+  //RecommendFilter recommendFilter = RecommendFilter();
   late bool _isLoading = true; //로딩관련
+
   void getCampData()async{
     campList = (await campApi.getCampList(context: context))!;
     setState(() {});
@@ -53,14 +55,13 @@ class _MainCampState extends State<MainCamp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     getCampData();
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         _isLoading = false;
       });
     });
-    recommendFilter.getPet();
+   // recommendFilter.getPet();
   }
   @override
   Widget build(BuildContext context) {
@@ -127,8 +128,14 @@ class _MainCampState extends State<MainCamp> {
                     //item 의 반목문 항목 형성
                     return GestureDetector(
                       onTap: (){
+                        if(index == 0){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> FilterDataPage(campData: campList,keywords:["자연"])));
+
+                        }else{
                         Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ChatPage()));
-                      },
+                        }
+                        print(index);
+                        },
                       child: Card(
                         child: Container(
                           height: 100,

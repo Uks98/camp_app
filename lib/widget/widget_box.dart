@@ -164,6 +164,63 @@ Widget searchCampBox(String image, String name, String location, String intro,
     ),
   );
 }
+
+//필터된 리스트를 반환하는 위젯
+  Widget filterCampBox(String image, String name, String location, String intro,) {
+    return GestureDetector(
+      //onTap: callback,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 350,
+              height: 350,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                image: DecorationImage(
+                    image: NetworkImage(image), fit: BoxFit.fill),
+              ),
+            ),
+          ),
+          Container(
+            width: 350,
+            margin: EdgeInsets.only(left: 30, top: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 8),
+                Text(
+                  name,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  location,
+                  style: TextStyle(
+                      color: Colors.grey[800],
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                SizedBox(height: 5),
+                Text(
+                  intro,
+                  style: TextStyle(
+                      color: Colors.grey[800],
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 //맵 정보에서 마커누를 시 발생하는 위젯 커스텀
 Future<void> showBottomInfo({
   required BuildContext context,
