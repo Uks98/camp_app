@@ -34,14 +34,7 @@ class _ReviewPageState extends State<ReviewPage> {
   final user = FirebaseAuth.instance.currentUser;
   SharedPreferences? pref;
 
-  //차트 카운터 저장
-  // void saveChartState(String name,double count)async{
-  // pref = await SharedPreferences.getInstance(); //sharedPreference
-  // pref?.setDouble(name,count);
-  // }
-  // void getData(){
-  //   starPeople5 =
-  // }
+  //평점 변수
   double check = 1;
 
   List<String> starPeoples5 = [];
@@ -53,7 +46,7 @@ class _ReviewPageState extends State<ReviewPage> {
   double serviceCheck = 1;
   String mainRef = "camp";
   String subRef = "review";
-  var average = 0;
+  var average = 4;
 
   double? rating; //차트에 사용되는 평점 변수 입니다.
   var ratingChart; //차트에 사용되는 평점 변수 입니다.
@@ -64,13 +57,14 @@ class _ReviewPageState extends State<ReviewPage> {
     return widget.campData;
   }
 
+  //리뷰 삭제 함수
   void deleteReview(int index) {
     if (review[index].id == user!.uid) {
       _realTimeBase.reference!
           .child(mainRef)
           .child(
-            campData.campId.toString(),
-          )
+        campData.campId.toString(),
+      )
           .child(subRef)
           .child(user!.uid)
           .remove();
@@ -79,7 +73,9 @@ class _ReviewPageState extends State<ReviewPage> {
       });
     }
   }
-  void initRealTimebase(){
+
+  //초기화
+  void initRealTimebase() {
     _realTimeBase.database;
     _realTimeBase.reference = _realTimeBase.database!.reference().child("camp");
     if (_realTimeBase.database != null) {
@@ -104,9 +100,8 @@ class _ReviewPageState extends State<ReviewPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    re(review);
     initRealTimebase();
-  //  readListLen();
+    print("aaaaaaaaaaaa${user!.uid}");
   }
 
   @override
@@ -182,7 +177,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               allowHalfRating: true,
                               itemCount: 5,
                               itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 4.0),
+                              EdgeInsets.symmetric(horizontal: 4.0),
                               itemBuilder: (context, _) => Icon(
                                 Icons.star,
                                 color: Colors.amber,
@@ -208,7 +203,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               allowHalfRating: true,
                               itemCount: 5,
                               itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 4.0),
+                              EdgeInsets.symmetric(horizontal: 4.0),
                               itemBuilder: (context, _) => Icon(
                                 Icons.star,
                                 color: Colors.amber,
@@ -305,51 +300,59 @@ class _ReviewPageState extends State<ReviewPage> {
                 ),
                 Stack(
                   children: [
+
+                    Center(
+                      //리뷰 페이지 사진
+                      child: Container(
+                          width: MediaQuery.of(context).size.width - 20,
+                          height: 300,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.network(
+                              campData.firstImageUrl.toString(),
+                              fit: BoxFit.cover,
+                            ),
+                          )),
+                    ),
                     Center(
                       child: Container(
-                          width: MediaQuery.of(context).size.width - 50,
-                          height: 200,
-                          color: Colors.grey[50]),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        width: MediaQuery.of(context).size.width - 20,
+                        height: 300,
+                      ),
                     ),
                     Center(
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "${campData.campName}",
-                            style: TextStyle(fontSize: 18),
+                            height: 40,
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           Text(
-                            "별점 평균",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            "리뷰${review.length}개",
-                            style: TextStyle(fontSize: 16),
+                            "캠핑 만족도",
+                            style: TextStyle(fontSize: 28, color: Colors.white,fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           Text(
                             "$average/5",
-                            style: TextStyle(fontSize: 35),
+                            style: TextStyle(
+                                fontSize: 33,
+                                color: Colors.white,fontWeight: FontWeight.bold),
                           ),
-                          Container(
-                              width: 200,
-                              height: 300,
-                              child: BarChart(
-                                BarChartData(
-                                  barGroups: barGroups,
-                                  gridData: FlGridData(show: false),
-                                  alignment: BarChartAlignment.spaceAround,
-                                  maxY: 100,
-                                ),
-                              )),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "작성된 리뷰 ${review.length}개",
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
                         ],
                       ),
                     ),
@@ -364,17 +367,6 @@ class _ReviewPageState extends State<ReviewPage> {
               child: ListView.separated(
                   shrinkWrap: false,
                   itemBuilder: (context, index1) {
-                    re(review);
-                    if (index1 == 0) {}
-                    if (review[index1].disable2! >= 5) {
-                      for(final x in starPeoples5){
-                        print("프린트해줘${x}");
-                      }
-                      readListLen(review[index1].disable1.toString());
-                    } else {
-
-                    }
-                    print("리뷰 몇점?${review[index1].disable2.toString()}");
                     return GestureDetector(
                       onTap: () {
                         deleteReview(index1);
@@ -383,20 +375,20 @@ class _ReviewPageState extends State<ReviewPage> {
                         child: InkWell(
                           child: Padding(
                             padding:
-                                EdgeInsets.only(top: 10, bottom: 10, left: 10),
+                            EdgeInsets.only(top: 10, bottom: 10, left: 10),
                             child: Column(
                               children: [
                                 Container(
                                   width: 350,
                                   child: Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "캠퍼${index1 + 1}",
@@ -405,6 +397,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                           SizedBox(
                                             height: 5,
                                           ),
+                                          //리뷰 작성 시간
                                           Text(
                                             "${review[index1].createTime.toString()}",
                                             style: TextStyle(fontSize: 15),
@@ -412,6 +405,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                           SizedBox(
                                             height: 15,
                                           ),
+                                          //사용자 리뷰
                                           Text(
                                             "${review[index1].review.toString()}",
                                             style: TextStyle(fontSize: 18),
@@ -439,70 +433,5 @@ class _ReviewPageState extends State<ReviewPage> {
             ),
           ],
         ));
-  }
-
-  List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(toY: review.length.toDouble()
-                //gradient: [Colors.red],
-                )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(toY: starPeople1!.toDouble(),
-                //gradient: _barsGradient,
-                )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        // BarChartGroupData(
-        //   x: 2,
-        //   barRods: [
-        //     BarChartRodData(
-        //       toY: 8,
-        //       gradient: _barsGradient,
-        //     )
-        //   ],
-        //   showingTooltipIndicators: [0],
-        // ),
-        // BarChartGroupData(
-        //   x: 3,
-        //   barRods: [
-        //     BarChartRodData(
-        //       toY: 8,
-        //       gradient: _barsGradient,
-        //     )
-        //   ],
-        //   showingTooltipIndicators: [0],
-        // ),
-        // BarChartGroupData(
-        //   x: 4,
-        //   barRods: [
-        //     BarChartRodData(
-        //       toY: 8,
-        //       gradient: _barsGradient,
-        //     )
-        //   ],
-        //   showingTooltipIndicators: [0],
-        // ),
-      ];
-
-  void re(List revew){
-    for(final x in revew){
-      s.add(x.disable2!.toDouble());
-      print("ssssss${starPeople1}");
-      starPeople1 = s.length.toDouble();
-    }
-  }
-  void readListLen(String review) {
-    starPeoples5.add(review);
-    //saveChartState("5",starPeople5!.toDouble());
-    //starPeople5 = pref?.getDouble("5");
-    print("명수 ${starPeoples5.length}");
   }
 }

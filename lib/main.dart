@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           fontFamily: "dream"
       ),
-      home: CampNavigation(),
+      home: LoginSignupScreen(),
     );
   }
 }

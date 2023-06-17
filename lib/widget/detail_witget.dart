@@ -31,6 +31,7 @@ class DetailWidget {
         Widget? googleMap,
         required String x,
         required String y,
+        required firstImage
       }) {
     KaKaoNaviService _kaKaoNaviService = KaKaoNaviService();
     String _noImage = "http://sanpo.pfmall.co.kr/img/no-image.png";
@@ -90,7 +91,7 @@ class DetailWidget {
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) =>  ReviewPage(
-                              campData: CampData(campId: campId,campName: campName,address: address),
+                              campData: CampData(campId : campId,campName: campName,address: address,firstImageUrl:firstImage),
                               id: ids!,
                             )));
                       },
