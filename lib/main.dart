@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camper/page/camp_mainPage.dart';
+import 'package:camper/page/camp_navigation.dart';
 import 'package:camper/page/login_signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           fontFamily: "dream"
       ),
-      home: MainCamp(),
+      home: CampNavigation(),
     );
   }
 }

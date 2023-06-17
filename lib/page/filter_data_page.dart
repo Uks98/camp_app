@@ -1,5 +1,6 @@
 import 'package:camper/widget/widget_box.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 import '../data/camp_data.dart';
 
@@ -33,6 +34,7 @@ class _FilterDataPageState extends State<FilterDataPage> {
           filterList.add(word);
         }
       }
+      print(filterList.first.campName);
     }
     return filterList;
   }
@@ -40,9 +42,6 @@ class _FilterDataPageState extends State<FilterDataPage> {
   Future<void> filterDataList() async {
     filterCampList = await findMatchingWords(widget.campList, widget.keywords);
     setState(() {});
-    for (final x in filterCampList) {
-      print("xx x : ${x.mainIntro}");
-    }
   }
 
   @override
@@ -57,8 +56,9 @@ class _FilterDataPageState extends State<FilterDataPage> {
     return Scaffold(
       body: Column(
         children: [
-          Expanded(
+         filterCampList.isNotEmpty ? Expanded(
             child: ListView.separated(
+
                 itemBuilder: (context, index) {
                   return _widgetBox.filterCampBox(
                       filterCampList[index].firstImageUrl.toString(),
@@ -72,7 +72,16 @@ class _FilterDataPageState extends State<FilterDataPage> {
                   );
                 },
                 itemCount: filterCampList.length),
-          )
+          ) : Center(child: Container(
+           width: 200,
+            child: LoadingIndicator(
+               indicatorType: Indicator.ballPulseSync, // Required, The loading type of the widget
+               colors: const [Colors.red,Colors.yellow,Colors.blue],       // Optional, The color collections
+               strokeWidth: 2,                     // Optional, The stroke of the line, only applicable to widget which contains line
+               backgroundColor: Colors.white,      // Optional, Background of the widget
+               pathBackgroundColor: Colors.black  // Optional, the stroke backgroundColor
+         ),
+          ),)
         ],
       ),
     );

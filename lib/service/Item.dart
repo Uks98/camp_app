@@ -52,9 +52,9 @@ class CampItem {
               ),
             ],
           ): Container(),
-          auto != 0 ?SizedBox(
-            width: _wid,
-          ) : SizedBox(width: 20,),
+          auto >= 0 ?SizedBox(
+            width: 20,
+          ) : SizedBox(width: _wid,),
           glam > 0 ? Column(
             children: [
               Image.asset(
@@ -70,21 +70,23 @@ class CampItem {
               ),
             ],
           ) : Container(),
-          caravn > 0 ? Column(
-            children: [
-              SizedBox(width: _wid,),
-              Image.asset(
-                _campImageList[2],
-                height: 50,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "카라반",
-                style: TextStyle(fontSize: 12),
-              ),
-            ],
+          caravn > 0 ? Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Column(
+              children: [
+                Image.asset(
+                  _campImageList[2],
+                  height: 50,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "카라반",
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
           ) : Container(),
         ],
       ),

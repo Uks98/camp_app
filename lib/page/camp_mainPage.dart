@@ -129,7 +129,7 @@ class _MainCampState extends State<MainCamp> {
                     return GestureDetector(
                       onTap: (){
                         if(index == 0){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> FilterDataPage(campData: campList,keywords:["자연"])));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> FilterDataPage(campData: campList,keywords:["강"])));
 
                         }else{
                         Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ChatPage()));

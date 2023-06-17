@@ -33,6 +33,7 @@ class _CommunityState extends State<Community> {
   String downloadUrl = ""; // 이미지가 없을 경우 기본 값
   DocumentSnapshot? documentSnapshot;
   final user = FirebaseAuth.instance.currentUser; //사용자 토큰 값 가져오는 변수
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   final picker = ImagePicker();
   String time = ""; //firebase에 저장되는 시간
@@ -91,13 +92,14 @@ class _CommunityState extends State<Community> {
       required String imageUrls,
       required String times}) async {
     //final userData =  await FirebaseFirestore.instance.collection(colName).doc(user!.uid).get();
-    FirebaseFirestore.instance.collection(colName).add({
+    firestore.collection(colName).add({
       titles: title,
       fnDatetime: Timestamp.now(),
       userId: user!.uid,
       contents: content,
       "time": time,
       'image_urls': imageUrls,
+      "likeCount" : "likeCount"
     });
   }
   // 컬렉션명
@@ -132,6 +134,7 @@ class _CommunityState extends State<Community> {
           SizedBox(
             height: 10,
           ),
+
           Text(
             "게시글 작성하기",
             style: TextStyle(
@@ -334,7 +337,7 @@ class _CommunityState extends State<Community> {
                                             ),
                                             SizedBox(height: 10,),
                                             //uid가 일치해야만 삭제라는 문구 표시
-                                            docsList[index]["userId"]== user!.uid ? GestureDetector(
+                                            docsList[index]["userId"]== user?.uid ? GestureDetector(
                                                 onTap:(){
                                                   deleteDoc(snapshot,index); //게시글 삭제하기
                                                 },
