@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:camper/color/color.dart';
 import 'package:camper/data/search_camp.dart';
 import 'package:camper/page/detail_page.dart';
@@ -61,61 +62,71 @@ class _MainCampState extends State<MainCamp> {
         _isLoading = false;
       });
     });
-   // recommendFilter.getPet();
+    // recommendFilter.getPet();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _isLoading ? Skeleton(
-          isLoading: _isLoading,
-          //https://pub.dev/packages/skeletons
-          skeleton: SkeletonListView(
-            padding: EdgeInsets.all(20),
-          ),
-          child: Container(child: Center(child: Text("Content"))),
-        ): ListView.separated(
-            shrinkWrap: false,
-            itemBuilder: (context, index) {
-              if(index == 0){
-                return Container(
+      backgroundColor: Colors.white,
+      body: _isLoading ? Skeleton(
+        isLoading: _isLoading,
+        //https://pub.dev/packages/skeletons
+        skeleton: SkeletonListView(
+          padding: EdgeInsets.all(20),
+        ),
+        child: Container(child: Center(child: Text("Content"))),
+      ): ListView.separated(
+          shrinkWrap: false,
+          itemBuilder: (context, index) {
+            if(index == 0){
+              return Container(
                   margin: EdgeInsets.only(top: 25,left: 20,bottom: 8),
                   child: Text("오늘의 캠핑 🌿",style: TextStyle(fontSize: 30,color: Colors.grey[800],fontWeight: FontWeight.bold),));
-              }else if(index == 1){
-                return Container(
-                  width: 400,
-                  height: 70,
-                  margin: EdgeInsets.only(left: 90),
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categoryIcon.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          SizedBox(height: 5,),
-                          GestureDetector(
-                            onTap: (){
-                              getCategory(index);
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>KeyWordPage(keyword: _keyword)));
-                            },
-                            child: Image.asset(
-                              categoryIcon[index],
-                              width: 40,
-                            ),
-                          ),
-                          SizedBox(height: 5,),
-                          Text(camp[index])
-                        ],
+            }else if(index == 1){
+              return Container(
+                width: 400,
+                height: 70,
+                margin: EdgeInsets.only(left: 90),
+                child: ListView.separated(
+
+                  scrollDirection: Axis.horizontal,
+                  itemCount: categoryIcon.length,
+                  itemBuilder: (context, index) {
+                    print("${index}인덱싱");
+                    //에니메이션 적용,
+                    //on tap함수 안에서 적용 시 오류 발생
+                    return OpenContainer<bool>(
+                      transitionDuration: Duration(milliseconds: 500),
+                      closedColor: Colors.white,
+                        closedElevation: 0.0,
+                        openBuilder: (BuildContext context, VoidCallback _) {
+                          getCategory(index);
+                          return KeyWordPage(keyword: _keyword);
+                        },
+                        closedBuilder: (BuildContext context, VoidCallback action) {
+                          return Column(
+                            children: [
+                              SizedBox(height: 5,),
+                              Image.asset(
+                                categoryIcon[index],
+                                width: 40,
+                              ),
+                              SizedBox(height: 5,),
+                              Text(camp[index])
+                            ],
+                          );
+                        },
                       );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(width: 50);
-                    },
-                  ),
-                );
-              }else if (index == 2){
-                return Container(
-                  width: 50,
-                  height: 90,
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(width: 50);
+                  },
+                ),
+              );
+            }else if (index == 2){
+              return Container(
+                width: 50,
+                height: 90,
                 child: GridView.builder(
                   itemCount: recommendLocation.length, //item 개수
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -132,83 +143,88 @@ class _MainCampState extends State<MainCamp> {
                           Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> FilterDataPage(campData: campList,keywords:["강"])));
 
                         }else{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ChatPage()));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ChatPage()));
                         }
                         print(index);
-                        },
+                      },
                       child: Card(
                         child: Container(
                           height: 100,
                           width: 100,
-                            child: Center(
-                              child: Text(
-                                recommendLocation[index],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
+                          child: Center(
+                            child: Text(
+                              recommendLocation[index],
+                              style: TextStyle(
+                                fontSize: 16,
                               ),
                             ),
+                          ),
                         ),
                       ),
                     );
-                    },
-              ),
-                );
-              }
-              return GestureDetector(
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
-                      DetailPage(
-                        campData: CampData(
-                            campName: campList[index].campName,
-                            campId: campList[index].campId,
-                            insrncAt : campList[index].insrncAt,
-                            feather : campList[index].feather,
-                            address : campList[index].address,
-                            mapx : campList[index].mapx,
-                            mapy : campList[index].mapy,
-                            tel : campList[index].tel,
-                            homePage : campList[index].homePage,
-                            resveUrl : campList[index].resveUrl,
-                            nomalSite : campList[index].nomalSite,
-                            autoSiteCo : campList[index].autoSiteCo,
-                            glamping : campList[index].glamping,
-                            caravSite : campList[index].caravSite,
-                            glamInside : campList[index].glamInside,
-                            caravanInside : campList[index].caravanInside,
-                            operPd : campList[index].operPd,
-                            operDay : campList[index].operDay,
-                            intro : campList[index].intro,
-                            mainIntro : campList[index].mainIntro,
-                            firstImageUrl : campList[index].firstImageUrl,
-                            toilet : campList[index].toilet,
-                            shower : campList[index].shower,
-                            wtrplCo : campList[index].wtrplCo,
-                            freeCon : campList[index].freeCon,
-                            freeCon2 : campList[index].freeCon2,
-                            posblFcltyCl : campList[index].posblFcltyCl,
-                            ProgrmBool : campList[index].ProgrmBool,
-                            ProgrmName : campList[index].ProgrmName,
-                            extshrCo : campList[index].extshrCo,
-                            fireSensorCo : campList[index].fireSensorCo,
-                            thema : campList[index].thema,
-                        ),
-                      )
-                  ));
-                },
-                child: _widgetBox.campingListWidget(
+                  },
+                ),
+              );
+            }
+            return OpenContainer<bool>(
+              closedColor: Colors.white,
+              openColor: Colors.white,
+              closedElevation: 0.0,
+              transitionDuration: Duration(seconds: 1),
+              transitionType: ContainerTransitionType.fade,
+              closedBuilder: (BuildContext context, VoidCallback _) {
+                return _widgetBox.campingListWidget(
                     campList[index].firstImageUrl == null ? "asdasda" : campList[index].firstImageUrl.toString(),
                     campList[index].campName.toString(),
                     campList[index].address.toString(),
-                  campList[index].intro.toString(),
-                  130,130 //각 각 width,height
-                ),
-              );
-            },
-            separatorBuilder: (ctx, idx) {
-              return _decorationWidgetBox.listMargin();
-            },
-            itemCount: campList.length),
+                    campList[index].intro.toString(),
+                    130,130 //각 각 width,height
+                );
+              },
+              openBuilder: (BuildContext context, VoidCallback _) {
+                return DetailPage(
+                  campData: CampData(
+                    campName: campList[index].campName,
+                    campId: campList[index].campId,
+                    insrncAt : campList[index].insrncAt,
+                    feather : campList[index].feather,
+                    address : campList[index].address,
+                    mapx : campList[index].mapx,
+                    mapy : campList[index].mapy,
+                    tel : campList[index].tel,
+                    homePage : campList[index].homePage,
+                    resveUrl : campList[index].resveUrl,
+                    nomalSite : campList[index].nomalSite,
+                    autoSiteCo : campList[index].autoSiteCo,
+                    glamping : campList[index].glamping,
+                    caravSite : campList[index].caravSite,
+                    glamInside : campList[index].glamInside,
+                    caravanInside : campList[index].caravanInside,
+                    operPd : campList[index].operPd,
+                    operDay : campList[index].operDay,
+                    intro : campList[index].intro,
+                    mainIntro : campList[index].mainIntro,
+                    firstImageUrl : campList[index].firstImageUrl,
+                    toilet : campList[index].toilet,
+                    shower : campList[index].shower,
+                    wtrplCo : campList[index].wtrplCo,
+                    freeCon : campList[index].freeCon,
+                    freeCon2 : campList[index].freeCon2,
+                    posblFcltyCl : campList[index].posblFcltyCl,
+                    ProgrmBool : campList[index].ProgrmBool,
+                    ProgrmName : campList[index].ProgrmName,
+                    extshrCo : campList[index].extshrCo,
+                    fireSensorCo : campList[index].fireSensorCo,
+                    thema : campList[index].thema,
+                  ),
+                );
+              },);
+
+          },
+          separatorBuilder: (ctx, idx) {
+            return _decorationWidgetBox.listMargin();
+          },
+          itemCount: campList.length),
     );
   }
 }

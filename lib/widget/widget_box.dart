@@ -74,7 +74,7 @@ Widget campingListWidget(String imaUrl, String name, String location, String x,
             width: 20,
           ),
           Container(
-            width: 250,
+            width: 200,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
